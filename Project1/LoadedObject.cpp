@@ -110,6 +110,11 @@ void LoadedObject::InitBuffers()
 		program_id, "mat_specular");
 	uniform_material_power = glGetUniformLocation(
 		program_id, "mat_power");
+}
+
+void LoadedObject::Render()
+{
+
 
 	// Fill uniform vars
 	glUniformMatrix4fv(uniform_mv, 1, GL_FALSE, glm::value_ptr(model * view));
@@ -118,11 +123,6 @@ void LoadedObject::InitBuffers()
 	glUniform3fv(uniform_material_diffuse, 1, glm::value_ptr(amb_diff_spec[1]));
 	glUniform3fv(uniform_specular, 1, glm::value_ptr(amb_diff_spec[2]));
 	glUniform1f(uniform_material_power, power);
-}
-
-void LoadedObject::Render()
-{
-
 
 	glBindTexture(GL_TEXTURE_2D, texture_id);
 

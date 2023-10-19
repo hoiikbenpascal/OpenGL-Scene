@@ -28,7 +28,8 @@ unsigned const int DELTA_TIME = 10;
 // Variables
 //--------------------------------------------------------------------------------
 
-LoadedObject teapot;
+const int object_ammount = 2;
+LoadedObject objects[object_ammount];
 
 
 
@@ -54,7 +55,11 @@ void Render()
     glClearColor(0.0, 0.0, 0.4, 0);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-    teapot.Render();
+
+    for(int i = 0; i < object_ammount; i++)
+    {
+		objects[i].Render();
+    }
 
     glutSwapBuffers();
 }
@@ -134,14 +139,18 @@ void InitMatrices()
 
 void InitBuffers()
 {
-    teapot.InitBuffers();
+    for(int i = 0; i < object_ammount; i++)
+    {
+        objects[i].InitBuffers();
+    }
 }
 
 void InitObjects() {
 
 	glm::vec3 amb_diff_spec[3] = { {}, {}, {} };
-	teapot = LoadedObject("Objects/teapot.obj", 100, amb_diff_spec, "Textures/yellobrk.bmp");
-    //LoadedObject::InitUniformVars();
+	objects[0] = LoadedObject("Objects/teapot.obj", 100, amb_diff_spec, "Textures/yellobrk.bmp");
+    objects[1] = LoadedObject("Objects/torus.obj", 100, amb_diff_spec, "Textures/uvtemplate.bmp");
+
 }
 
 int main(int argc, char** argv)
