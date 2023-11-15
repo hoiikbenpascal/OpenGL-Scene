@@ -9,8 +9,11 @@
 
 #include "texture.h"
 #include "glsl.h"
+#include "Camera.h"
 #include "LoadedObject.h"
 #include "Object.h"
+#include "PrimitiveObject.h"
+#include "PrimitiveBuilder.h"
 #include "objloader.h"
 
 using namespace std;
@@ -19,18 +22,18 @@ using namespace std;
 //--------------------------------------------------------------------------------
 // Consts
 //--------------------------------------------------------------------------------
-
-const int WIDTH = 800, HEIGHT = 600;
-unsigned const int DELTA_TIME = 10;
+#define DELTA_TIME 10
+#define WIDTH 800
+#define HEIGHT 600
 
 
 //--------------------------------------------------------------------------------
 // Variables
 //--------------------------------------------------------------------------------
 
-const int object_ammount = 2;
-LoadedObject objects[object_ammount];
-
+const int object_ammount = 3;
+Object* objects[object_ammount];
+static Camera MainCamera;
 
 
 
@@ -40,8 +43,77 @@ LoadedObject objects[object_ammount];
 
 void keyboardHandler(unsigned char key, int a, int b)
 {
-    if (key == 27)
+    switch (key) {
+        //escape
+    case 27:
         glutExit();
+        break;
+        //move the camera
+    case 'w':
+        MainCamera.Forward();
+        break;
+    case 'W':
+        MainCamera.Forward();
+        break;
+    case 's':
+        MainCamera.Backward();
+        break;
+    case 'S':
+        MainCamera.Backward();
+        break;
+    case 'a':
+        MainCamera.Left();
+        break;
+    case 'A':
+        MainCamera.Left();
+        break;
+    case 'd':
+        MainCamera.Right();
+        break;
+    case 'D':
+        MainCamera.Right();
+        break;
+    case ' ':
+        MainCamera.MoveUp();
+        break;
+    case 'x':
+        MainCamera.MoveDown();
+        break;
+    case 'X':
+        MainCamera.MoveDown();
+        break;
+
+        //roatate the camera
+    case 'i':
+        MainCamera.LookUp();
+        break;
+    case 'I':
+        MainCamera.LookUp();
+        break;
+    case 'j':
+        MainCamera.LookLeft();
+        break;
+    case 'J':
+        MainCamera.LookLeft();
+        break;
+    case 'k':
+        MainCamera.LookDown();
+        break;
+    case 'K':
+        MainCamera.LookDown();
+        break;
+    case 'l':
+        MainCamera.LookRight();
+        break;
+    case 'L':
+        MainCamera.LookRight();
+        break;
+
+        //switch the cameras
+    case 'v':
+        MainCamera.toggle();
+        break;
+    }
 }
 
 
@@ -51,14 +123,15 @@ void keyboardHandler(unsigned char key, int a, int b)
 
 void Render()
 {
+
     // Define background
-    glClearColor(0.0, 0.0, 0.4, 0);
+    glClearColor(0, 0, 0.5, 0);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 
     for(int i = 0; i < object_ammount; i++)
     {
-		objects[i].Render();
+		objects[i]->Render();
     }
 
     glutSwapBuffers();
@@ -107,28 +180,24 @@ void InitGlutGlew(int argc, char** argv)
 void InitShaders()
 {
 
-    //init loadedobject shaders
-    Object::InitShaders(LoadedObject::vertexShaderPath, LoadedObject::fragShaderPath, &(LoadedObject::program_id));
-
 }
 
 
 //------------------------------------------------------------
-// void InitMatrices()
+// void InitCamera()
 //------------------------------------------------------------
 
-void InitMatrices()
+void InitCamera()
 {
-
-    Object::projection = glm::perspective(
-        glm::radians(45.0f),
-        1.0f * WIDTH / HEIGHT, 0.1f,
-        20.0f);
-
-    Object::view = glm::lookAt(
-        glm::vec3(2.0, 2.0, 7.0),
+    MainCamera = Camera(glm::vec3(0, 3, -10.0),
         glm::vec3(0.0, 0.0, 0.0),
         glm::vec3(0.0, 1.0, 0.0));
+
+    MainCamera.SetProjection(WIDTH, HEIGHT);
+
+    MainCamera.SetLightPos(glm::vec3(0, 3, -10));
+
+    Object::camera = &MainCamera;
 }
 
 
@@ -141,25 +210,38 @@ void InitBuffers()
 {
     for(int i = 0; i < object_ammount; i++)
     {
-        objects[i].InitBuffers();
+        objects[i]->InitBuffers();
     }
 }
 
 void InitObjects() {
 
-	glm::vec3 amb_diff_spec[3] = { {}, {}, {} };
-	objects[0] = LoadedObject("Objects/teapot.obj", 100, amb_diff_spec, "Textures/yellobrk.bmp");
-    objects[1] = LoadedObject("Objects/torus.obj", 100, amb_diff_spec, "Textures/uvtemplate.bmp");
+	glm::vec3 amb_diff_spec[3] = { {0,0,0}, {0,0,0}, glm::vec3(1)};
+	objects[0] = new LoadedObject("Objects/teapot.obj", 100, amb_diff_spec, "Textures/Yellobrk.bmp");
+    objects[1] = new LoadedObject("Objects/torus.obj", 1024, amb_diff_spec, "Textures/uvtemplate.bmp");
+    objects[2] = CreateCube();
+
+
+    //objects[0].Move(0, 0, 0);
+    objects[0]->SetRotation(0,1,0,2);
+
+    objects[1]->Move(3.5, 0.5f, 0);
+    objects[1]->SetRotation(0, 0, 1, 2);
+
+    objects[2]->Move(-3.5, 0.5f, 0);
+    objects[2]->SetRotation(1, 0, 0, 0.05f);
 
 }
 
 int main(int argc, char** argv)
 {
-    InitMatrices();
+    InitCamera();
     InitGlutGlew(argc, argv);
     InitShaders();
     InitObjects();
     InitBuffers();
+    glutKeyboardFunc(keyboardHandler);
+    
 
     // Hide console window
     HWND hWnd = GetConsoleWindow();

@@ -1,4 +1,4 @@
-#version 400
+#version 430 core
 
 // Uniform matrices
 uniform mat4 mv;
@@ -10,19 +10,16 @@ in vec3 position;
 in vec3 normal;
 in vec2 uv;
 
-
-
 out VS_OUT
 {
    vec3 N;
    vec3 L;
    vec3 V;
-   vec2 UV;
 } vs_out;
+out vec2 UV;
 
 void main()
 {
-    vs_out.UV = uv;
     // Calculate view-space coordinate
     vec4 P = mv * vec4(position, 1.0);
 
@@ -38,4 +35,5 @@ void main()
     // Calculate the clip-space position of each vertex
     gl_Position = projection * P;
 
+    UV = uv;
 }

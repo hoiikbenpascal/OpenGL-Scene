@@ -14,6 +14,7 @@ class LoadedObject : public Object
 	vector<glm::vec3> normals;
 	vector<glm::vec3> vertices;
 	vector<glm::vec2> uvs;
+	glm::vec3 position;
 	GLuint texture_id;
 
 
@@ -21,15 +22,22 @@ class LoadedObject : public Object
 	glm::mat4 model;
 	float power;
 
+	bool apply_texture = false;
+
 public:
 	void Render() override;
 	void InitBuffers() override;
+
 	LoadedObject(const char object_path[], float power = 1, glm::vec3 amb_diff_spec[] = nullptr, const char texture_path[] = nullptr);
 	LoadedObject(){};
 
-	static const char* vertexShaderPath;
-	static const char* fragShaderPath;
 
+	void Move(float x, float y, float z) override;
+
+	static const char* vertex_shader_path;
+	static const char* frag_shader_path;
+
+	static bool shaders_made;
 	static GLuint program_id;
 	static GLuint uniform_proj;
 	static GLuint uniform_material_ambient;
@@ -37,4 +45,6 @@ public:
 	static GLuint uniform_specular;
 	static GLuint uniform_material_power;
 	static GLuint uniform_mv;
+	static GLuint uniform_apply_texture;
+	static GLuint uniform_light_pos;
 };
