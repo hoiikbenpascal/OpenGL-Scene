@@ -1,14 +1,20 @@
 #pragma once
 #include "Object.h"
 
+enum PrimitveTypes {
+	Line = GL_LINES,
+	Triangle = GL_TRIANGLES
+};
 
-class PrimitiveObject : public Object
+class PrimitiveMesh : public Object
 {
-	int vertices_size, colors_size, elements_size;
+	int vertices_size, colors_size, indices_size;
 
 	GLfloat* vertices;
 	GLfloat* colors;
-	GLushort* elements;
+	GLushort* indices;
+
+	PrimitveTypes type;
 
 	glm::mat4 model = glm::mat4();
 
@@ -20,8 +26,12 @@ class PrimitiveObject : public Object
 
 public:
 
-	PrimitiveObject(GLfloat vertices[], int vertices_size, GLfloat colors[] , int colors_size, GLushort elements[], int elements_size);
-	PrimitiveObject();
+	PrimitiveMesh(GLfloat vertices[], int vertices_size,
+		GLfloat colors[] , int colors_size,
+		GLushort indices[], int indices_size,
+		PrimitveTypes type = Line);
+
+	PrimitiveMesh();
 
 	void Render() override;
 	void InitBuffers() override;
