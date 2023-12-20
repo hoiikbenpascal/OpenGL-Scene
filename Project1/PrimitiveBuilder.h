@@ -1,6 +1,7 @@
 #pragma once
 
 #include "PrimitiveMesh.h"
+#include "PrimitiveObject.h"
 
 static PrimitiveMesh* CreateLineCube()
 {
@@ -80,4 +81,16 @@ static PrimitiveMesh* CreateSolidCube(float sideLength = 2) {
 
     return new PrimitiveMesh(vertices, 24, colors, 24, indices, 36, Triangle);
     //return new PrimitiveMesh(Solidvertices, std::size(Solidvertices), Solidcolors, std::size(Solidcolors), Solidelements, std::size(Solidelements), PrimitveTypes::Triangle);
+}
+
+static PrimitiveObject* CreatePrimitiveObject() {
+    const int mesh_ammount = 2;
+    PrimitiveMesh* meshes = new PrimitiveMesh[mesh_ammount]{
+        *CreateLineCube(), *CreateSolidCube(3)
+    };
+    meshes[0].Move(0, 1.5, 0);
+    //meshes[0] = *CreateLineCube();
+    //meshes[1] = *CreateSolidCube(3);
+
+    return new PrimitiveObject(meshes, mesh_ammount);
 }

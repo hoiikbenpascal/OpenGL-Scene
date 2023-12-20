@@ -24,6 +24,7 @@ PrimitiveMesh::PrimitiveMesh(GLfloat vertices[],int vertices_size
     this->colors_size = colors_size;
     this->indices_size = indices_size;
 
+    //allocate memory for object
     this->vertices = (GLfloat*)calloc(vertices_size, sizeof(GLfloat));
     this->colors = (GLfloat*)calloc(colors_size, sizeof(GLfloat));
     this->indices = (GLushort*)calloc(indices_size, sizeof(GLushort));
@@ -32,6 +33,7 @@ PrimitiveMesh::PrimitiveMesh(GLfloat vertices[],int vertices_size
         throw std::bad_alloc();
     }
 
+    //copy object into allocated memory
     for(int i = 0; i < vertices_size; i++)
     {
         this->vertices[i] = vertices[i];

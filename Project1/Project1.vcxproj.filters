@@ -48,6 +48,9 @@
     <ClCompile Include="PrimitiveMesh.cpp">
       <Filter>Source Files\Objects</Filter>
     </ClCompile>
+    <ClCompile Include="PrimitiveObject.cpp">
+      <Filter>Source Files\Objects</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="glsl.h">
@@ -73,6 +76,9 @@
     </ClInclude>
     <ClInclude Include="PrimitiveBuilder.h">
       <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="PrimitiveObject.h">
+      <Filter>Header Files\Objects</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -14,6 +14,7 @@
 #include "Object.h"
 #include "PrimitiveMesh.h"
 #include "PrimitiveBuilder.h"
+#include "PrimitiveObject.h"
 #include "objloader.h"
 
 using namespace std;
@@ -32,7 +33,7 @@ using namespace std;
 //--------------------------------------------------------------------------------
 
 //should be increased as nesasary
-const int object_ammount = 4;
+const int object_ammount = 3;
 Object* objects[object_ammount];
 static Camera MainCamera;
 
@@ -220,8 +221,7 @@ void InitObjects() {
 	glm::vec3 amb_diff_spec[3] = { {0,0,0}, {0,0,0}, glm::vec3(1)};
 	objects[0] = new LoadedObject("Objects/teapot.obj", 100, amb_diff_spec, "Textures/Yellobrk.bmp");
     objects[1] = new LoadedObject("Objects/torus.obj", 1024, amb_diff_spec, "Textures/uvtemplate.bmp");
-    objects[2] = CreateLineCube();
-    objects[3] = CreateSolidCube();
+    objects[2] = CreatePrimitiveObject();
 
 
     //objects[0].Move(0, 0, 0);
@@ -232,10 +232,6 @@ void InitObjects() {
 
     objects[2]->Move(-3.5, 0.5f, 0);
     objects[2]->SetRotation(1, 0, 0, 0.05f);
-
-    objects[3]->Move(-3.5f, 2, 3.5);
-    objects[3]->SetRotation(1, 0, 0, 0.05f);
-
 }
 
 int main(int argc, char** argv)

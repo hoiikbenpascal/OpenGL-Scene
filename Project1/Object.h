@@ -20,7 +20,16 @@ public:
 
 	bool rotating = false;
 
-	void SetRotation(float x, float y, float z, float angle);
+	virtual void SetRotation(float x, float y, float z, float angle)
+	{
+		if (x, y, z, angle == 0)
+		{
+			rotating = false;
+			return;
+		}
+		this->rotation = glm::vec4(x, y, z, angle);
+		rotating = true;
+	};
 
 	static void InitShaders(const char* vertex_shader_path,const char* frag_shader_path, GLuint* program_id)
 	{
