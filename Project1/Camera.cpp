@@ -4,11 +4,15 @@
 
 #include "glsl.h";
 
+const float NearPlane = 0.1f;
+const float FarPlane = 50;
+const float FoV = 45;
+
 void Camera::SetProjection(int WIDTH, int HEIGHT)
 {
-	Projection = glm::perspective(glm::radians(45.0f),
-		1.0f * WIDTH / HEIGHT, 0.1f,
-		50.0f);
+	Projection = glm::perspective(glm::radians(FoV),
+		1.0f * WIDTH / HEIGHT, NearPlane,
+		FarPlane);
 }
 
 glm::mat4 Camera::GetView()

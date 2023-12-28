@@ -64,6 +64,11 @@ void LoadedObject::Move(float x, float y, float z)
 	model = glm::translate(model, glm::vec3(x,y,z));
 }
 
+void LoadedObject::Scale(float x, float y, float z)
+{
+	model = glm::scale(model, glm::vec3(x, y, z));
+}
+
 void LoadedObject::InitBuffers()
 {
 	GLuint position_id;

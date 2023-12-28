@@ -141,9 +141,12 @@ void PrimitiveMesh::InitBuffers()
     glBindVertexArray(0);
 }
 
+void PrimitiveMesh::Scale(float x, float y, float z)
+{
+    this->model = glm::scale(model, glm::vec3(x, y, z));
+}
+
 void PrimitiveMesh::Move(float x, float y, float z)
 {
     model = glm::translate(model, glm::vec3(x, y, z));
 }
-
-

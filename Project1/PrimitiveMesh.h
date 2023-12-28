@@ -1,5 +1,6 @@
 #pragma once
 #include "Object.h"
+#include <glm/gtc/matrix_transform.hpp>
 
 enum PrimitveTypes {
 	Line = GL_LINES,
@@ -33,10 +34,18 @@ public:
 
 	PrimitiveMesh();
 
+	void ApplyModel(const glm::mat4* model) {
+		this->model = *model * this->model;
+	}
+
+	glm::mat4 getModel() {
+		return this->model;
+	}
+
+
 	void Render() override;
 	void InitBuffers() override;
-
+	void Scale(float x, float y, float z) override;
 	void Move(float x, float y, float z) override;
 
 };
-

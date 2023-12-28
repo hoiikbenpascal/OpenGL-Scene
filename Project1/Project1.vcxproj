@@ -136,6 +136,7 @@
     <ClCompile Include="objloader.cpp" />
     <ClCompile Include="PrimitiveMesh.cpp" />
     <ClCompile Include="PrimitiveObject.cpp" />
+    <ClCompile Include="SceneBuilder.h" />
     <ClCompile Include="texture.cpp" />
   </ItemGroup>
   <ItemGroup>

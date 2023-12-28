@@ -10,12 +10,8 @@
 #include "texture.h"
 #include "glsl.h"
 #include "Camera.h"
-#include "LoadedObject.h"
 #include "Object.h"
-#include "PrimitiveMesh.h"
-#include "PrimitiveBuilder.h"
-#include "PrimitiveObject.h"
-#include "objloader.h"
+#include "SceneBuilder.h"
 
 using namespace std;
 
@@ -32,11 +28,10 @@ using namespace std;
 // Variables
 //--------------------------------------------------------------------------------
 
-//should be increased as nesasary
-const int object_ammount = 3;
-Object* objects[object_ammount];
+
 static Camera MainCamera;
 
+vector<Object*> objects;
 
 
 //--------------------------------------------------------------------------------
@@ -131,7 +126,7 @@ void Render()
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 
-    for(int i = 0; i < object_ammount; i++)
+    for(int i = 0; i < objects.size(); i++)
     {
 		objects[i]->Render();
     }
@@ -210,7 +205,7 @@ void InitCamera()
 
 void InitBuffers()
 {
-    for(int i = 0; i < object_ammount; i++)
+    for(int i = 0; i < objects.size(); i++)
     {
         objects[i]->InitBuffers();
     }
@@ -218,20 +213,7 @@ void InitBuffers()
 
 void InitObjects() {
 
-	glm::vec3 amb_diff_spec[3] = { {0,0,0}, {0,0,0}, glm::vec3(1)};
-	objects[0] = new LoadedObject("Objects/teapot.obj", 100, amb_diff_spec, "Textures/Yellobrk.bmp");
-    objects[1] = new LoadedObject("Objects/torus.obj", 1024, amb_diff_spec, "Textures/uvtemplate.bmp");
-    objects[2] = CreatePrimitiveObject();
-
-
-    //objects[0].Move(0, 0, 0);
-    objects[0]->SetRotation(0,1,0,2);
-
-    objects[1]->Move(3.5, 0.5f, 0);
-    objects[1]->SetRotation(0, 0, 1, 2);
-
-    objects[2]->Move(-3.5, 0.5f, 0);
-    objects[2]->SetRotation(1, 0, 0, 0.05f);
+    objects = CreateObjects();
 }
 
 int main(int argc, char** argv)

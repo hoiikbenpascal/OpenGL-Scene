@@ -80,7 +80,6 @@ static PrimitiveMesh* CreateSolidCube(float sideLength = 2) {
     };
 
     return new PrimitiveMesh(vertices, 24, colors, 24, indices, 36, Triangle);
-    //return new PrimitiveMesh(Solidvertices, std::size(Solidvertices), Solidcolors, std::size(Solidcolors), Solidelements, std::size(Solidelements), PrimitveTypes::Triangle);
 }
 
 static PrimitiveObject* CreatePrimitiveObject() {

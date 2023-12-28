@@ -33,6 +33,7 @@ public:
 
 
 	void Move(float x, float y, float z) override;
+	void Scale(float x, float y, float z) override;
 
 	static const char* vertex_shader_path;
 	static const char* frag_shader_path;

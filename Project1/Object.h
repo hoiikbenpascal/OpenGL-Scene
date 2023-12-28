@@ -31,6 +31,8 @@ public:
 		rotating = true;
 	};
 
+	virtual void Scale(float x, float y, float z) = 0;
+
 	static void InitShaders(const char* vertex_shader_path,const char* frag_shader_path, GLuint* program_id)
 	{
 		char* vertexshader = glsl::readFile(vertex_shader_path);
