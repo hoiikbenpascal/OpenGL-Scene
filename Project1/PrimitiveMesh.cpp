@@ -13,9 +13,9 @@ GLuint PrimitiveMesh::uniform_mvp;
 
 bool PrimitiveMesh::shaders_made = false;
 
-PrimitiveMesh::PrimitiveMesh(GLfloat vertices[],int vertices_size
-    , GLfloat colors[], int colors_size,
-    GLushort indices[], int indices_size,
+PrimitiveMesh::PrimitiveMesh(GLfloat* vertices,int vertices_size
+    , GLfloat* colors, int colors_size,
+    GLushort* indices, int indices_size,
     PrimitveTypes type)
 {
     this->type = type;

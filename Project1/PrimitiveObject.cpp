@@ -3,6 +3,24 @@
 
 const float ROTATION_SCALER = 1;
 
+PrimitiveObject::PrimitiveObject(PrimitiveMesh* meshes,const int ammount)
+{
+	this->model = new glm::mat4(1.0f);
+	this->meshes = meshes;
+	this->meshes_ammount = ammount;
+
+}
+
+PrimitiveObject::PrimitiveObject(std::vector<PrimitiveMesh> meshes)
+{
+	this->model = new glm::mat4(1.0f);
+	this->meshes = meshes.data();
+	this->meshes_ammount = meshes.size();
+
+}
+
+
+
 void PrimitiveObject::Render()
 {
 	if (rotating) {
@@ -51,14 +69,6 @@ void PrimitiveObject::SetRotation(float x, float y, float z, float angle)
 
 	rotating = true;
 	this->rotation = glm::vec4(x, y, z, angle);
-}
-
-PrimitiveObject::PrimitiveObject(PrimitiveMesh* meshes,const int ammount)
-{
-	this->model = new glm::mat4(1.0f);
-	this->meshes = meshes;
-	this->meshes_ammount = ammount;
-
 }
 
 PrimitiveObject::~PrimitiveObject()

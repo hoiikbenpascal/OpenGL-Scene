@@ -27,12 +27,18 @@ class PrimitiveMesh : public Object
 
 public:
 
-	PrimitiveMesh(GLfloat vertices[], int vertices_size,
-		GLfloat colors[] , int colors_size,
-		GLushort indices[], int indices_size,
+	PrimitiveMesh(GLfloat* vertices, int vertices_size,
+		GLfloat* colors , int colors_size,
+		GLushort* indices, int indices_size,
 		PrimitveTypes type = Line);
 
 	PrimitiveMesh();
+
+	~PrimitiveMesh() {
+		delete[] vertices;
+		delete[] indices;
+		delete[] colors;
+	}
 
 	void ApplyModel(const glm::mat4* model) {
 		this->model = *model * this->model;

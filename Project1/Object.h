@@ -20,6 +20,9 @@ public:
 
 	bool rotating = false;
 
+	//TODO make a rotate function to rotate an object once
+	//virtual void Rotate(float x, float y, float z) = 0;
+
 	virtual void SetRotation(float x, float y, float z, float angle)
 	{
 		if (x, y, z, angle == 0)
