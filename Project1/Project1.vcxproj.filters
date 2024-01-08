@@ -57,6 +57,9 @@
     <ClCompile Include="SceneBuilder.h">
       <Filter>Header Files\Builders</Filter>
     </ClCompile>
+    <ClCompile Include="Animation.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="glsl.h">
@@ -85,6 +88,9 @@
     </ClInclude>
     <ClInclude Include="PrimitiveBuilder.h">
       <Filter>Header Files\Builders</Filter>
+    </ClInclude>
+    <ClInclude Include="Animation.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -19,7 +19,6 @@ class LoadedObject : public Object
 
 
 	glm::vec3 amb_diff_spec[amb_diff_spec_size];
-	glm::mat4 model;
 	float power;
 
 	bool apply_texture = false;
@@ -30,10 +29,6 @@ public:
 
 	LoadedObject(const char object_path[], float power = 1, glm::vec3 amb_diff_spec[] = nullptr, const char texture_path[] = nullptr);
 	LoadedObject(){};
-
-
-	void Move(float x, float y, float z) override;
-	void Scale(float x, float y, float z) override;
 
 	static const char* vertex_shader_path;
 	static const char* frag_shader_path;

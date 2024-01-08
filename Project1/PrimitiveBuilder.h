@@ -235,17 +235,19 @@ static PrimitiveObject* CreatePerson() {
         *CreateSolidRect(1.5, 0.2f, 0.2f, jean_color), //legs
         *CreateSolidRect(1.5, 0.2f, 0.2f, jean_color),
 
-        *CreateSolidRect(1.1, 0.15f, 0.15f, shirt_color), //arms
-        *CreateSolidRect(1.1, 0.15f, 0.15f, shirt_color),
+        *CreateSolidRect(1.1, 0.15f, 0.15f, skin_color), //arms
+        *CreateSolidRect(1.1, 0.15f, 0.15f, skin_color),
     };
 
     meshes[1].Move(0, 0.75f, 0); //head
 
-    meshes[2].Move(0.25, -1, 0.2); //legs
-    meshes[3].Move(-0.25, -1, 0.2);
+    meshes[2].Move(0.25, -1, 0.15); //legs
+    meshes[3].Move(-0.25, -1, 0.15);
     
-    meshes[4].Move(0.5, -0.1, 0.2); //arms
-    meshes[5].Move(-0.5, -0.1, 0.2); 
+    meshes[4].Move(1, 0.4, 0); //arms
+    meshes[4].Rotate(1, 1, 0, 180);
+    meshes[5].Move(-1, 0.4, 0); 
+    meshes[5].Rotate(1, 1, 0, 180);
 
     return new PrimitiveObject(meshes, mesh_ammount);
 }

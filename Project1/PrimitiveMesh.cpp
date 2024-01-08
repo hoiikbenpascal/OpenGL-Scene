@@ -58,9 +58,8 @@ PrimitiveMesh::PrimitiveMesh(GLfloat* vertices,int vertices_size
 
 void PrimitiveMesh::Render()
 {
-    if (rotating) {
-        model = glm::rotate(model, rotation.w, glm::vec3(rotation.x, rotation.y, rotation.z));
-    }
+    Object::Render();
+
     glm::mat4 mvp = camera->GetProjection() * camera->GetView() * model;
 
     // Attach to program_id
@@ -139,14 +138,4 @@ void PrimitiveMesh::InitBuffers()
 
     // Stop bind to vao
     glBindVertexArray(0);
-}
-
-void PrimitiveMesh::Scale(float x, float y, float z)
-{
-    this->model = glm::scale(model, glm::vec3(x, y, z));
-}
-
-void PrimitiveMesh::Move(float x, float y, float z)
-{
-    model = glm::translate(model, glm::vec3(x, y, z));
 }

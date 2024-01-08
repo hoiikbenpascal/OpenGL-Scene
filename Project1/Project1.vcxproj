@@ -128,6 +128,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Animation.cpp" />
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="glsl.cpp" />
     <ClCompile Include="LoadedObject.cpp" />
@@ -140,6 +141,7 @@
     <ClCompile Include="texture.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Animation.h" />
     <ClInclude Include="Camera.h" />
     <ClInclude Include="glsl.h" />
     <ClInclude Include="LoadedObject.h" />

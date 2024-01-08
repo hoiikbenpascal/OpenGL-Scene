@@ -17,8 +17,6 @@ class PrimitiveMesh : public Object
 
 	PrimitveTypes type;
 
-	glm::mat4 model = glm::mat4();
-
 	static const char* vertex_shader_path;
 	static const char* frag_shader_path;
 	static GLuint uniform_mvp;
@@ -51,7 +49,5 @@ public:
 
 	void Render() override;
 	void InitBuffers() override;
-	void Scale(float x, float y, float z) override;
-	void Move(float x, float y, float z) override;
 
 };

@@ -59,16 +59,6 @@ LoadedObject::LoadedObject(const char object_path[], float power, glm::vec3 amb_
 
 }
 
-void LoadedObject::Move(float x, float y, float z)
-{
-	model = glm::translate(model, glm::vec3(x,y,z));
-}
-
-void LoadedObject::Scale(float x, float y, float z)
-{
-	model = glm::scale(model, glm::vec3(x, y, z));
-}
-
 void LoadedObject::InitBuffers()
 {
 	GLuint position_id;
@@ -152,12 +142,9 @@ void LoadedObject::InitBuffers()
 
 void LoadedObject::Render()
 {
-	glm::mat4 view = camera->GetView();
+	Object::Render();
 
-	if(rotation != glm::vec4(0))
-	{
-		model = glm::rotate(model, glm::radians(rotation.w), glm::vec3(rotation.x, rotation.y, rotation.z));
-	}
+	glm::mat4 view = camera->GetView();
 
 	// Attach to program_id
 	glUseProgram(program_id);
