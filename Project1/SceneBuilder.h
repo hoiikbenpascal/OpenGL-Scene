@@ -32,7 +32,7 @@ static PrimitiveMesh* BuildGrass() {
     return new PrimitiveMesh(vertices, 12, colors, 12, indices, 6, PrimitveTypes::Triangle);
 }
 
-static Animation* CreateMovementAnimation() {
+static Animation CreateMovementAnimation() {
     vector<glm::vec3> transform = {
         glm::vec3(0,0,0),
         glm::vec3(0,0,2.5f),
@@ -54,11 +54,25 @@ static Animation* CreateMovementAnimation() {
         1,2,3,4,5,6
     };
 
-    Animation* animation = new Animation();
-    animation->SetTransform(transform);
-    animation->SetRotation(rotation);
-    animation->SetTimeStamps(timestamps);
-    animation->looped = true;
+    Animation animation = Animation();
+    animation.SetTransform(transform);
+    animation.SetRotation(rotation);
+    animation.SetTimeStamps(timestamps);
+    //animation->looped = true;
+    return animation;
+}
+
+static Animation CreateHopAnimation(float height = 2.5f) {
+    vector<glm::vec3> transform = {
+        glm::vec3(0,height,0),
+        glm::vec3(0,-height,0),
+    };
+    vector<float> timestamps = {
+        1,2
+    };
+    Animation animation = Animation();
+    animation.SetTransform(transform);
+    animation.SetTimeStamps(timestamps);
     return animation;
 }
 
@@ -76,13 +90,13 @@ static std::vector<Object*> CreateObjects() {
     CreatePerson()
     };
 
-    Animation* animation = CreateMovementAnimation();
+    Animation animation = CreateHopAnimation(5);
+    Animation animation2 = CreateMovementAnimation();
+    Animation animations[2] = {animation, animation2};
 
     //objects[0]->Move(0, 0, 0);
     //objects[0]->SetRotation(0,1,0,2);
-    objects[0]->setAnimations(animation, 1);
-
-    delete animation;
+    objects[0]->setAnimations(animations, 2, true);
 
     objects[1]->Move(3.5, 0.5f, 0);
     objects[1]->SetRotation(0, 0, 1, 2);

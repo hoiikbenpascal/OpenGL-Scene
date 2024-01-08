@@ -27,6 +27,7 @@ void Animation::Apply(glm::mat4* model)
 	if (totalTime >= timestamps[currentTimeStamp]) {
 		currentTimeStamp++;
 	}
+
 	if (scale.size() > currentTimeStamp) {
 		*model *= glm::scale(*model, scale[currentTimeStamp] * deltaTime);
 	}

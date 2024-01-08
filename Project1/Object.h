@@ -9,32 +9,66 @@
 
 class Object
 {
+	bool loopAllAnimations = false;
 
 protected:
 	GLuint vao;
+	vector<Animation> animations;
+
+	virtual void handleAnimations() {
+		//if there are no animations to handle
+		if (numberOfAnimations <= 0) {
+			return;
+		}
+
+
+		//if the animation isn't finished then just return
+		if (!this->animations[currentAnimation].finished) {
+			//apply the animation
+			animations[currentAnimation].Apply(&model);
+			return;
+		}
+
+		//check if the animation should be looped or not
+		if (this->animations[currentAnimation].looped) {
+			this->animations[currentAnimation].Restart();
+		}
+		else
+		{
+			//if not then go to the next animation if there is one
+			if (currentAnimation + 1 < numberOfAnimations) {
+				currentAnimation++;
+				animations[currentAnimation].Restart();
+				return;
+			}
+
+			//if all the animations need to be looped than reset the animation counter and restart all animations
+			if (loopAllAnimations) {
+				currentAnimation = 0;
+				for (int i = 0; i < numberOfAnimations; i++) {
+					animations[i].Restart();
+				}
+			}
+		}
+	}
+
 public:
 
 	glm::mat4 model;
 	glm::vec4 rotation;
-	Animation* animations;
 	unsigned short numberOfAnimations = 0;
 	unsigned short currentAnimation = 0;
 
 	//handels the rotating and the animating so the base classes can just implement this render function
 	virtual void Render() {
 
-		if (numberOfAnimations > 0) {
-			animations[currentAnimation].Apply(&model);
-			if (this->animations[currentAnimation].finished) {
-				this->animations[currentAnimation].Restart();
-			}
-		}
-
 		if(rotation != glm::vec4(0))
 		{
 			model = glm::rotate(model, glm::radians(rotation.w), glm::vec3(rotation.x, rotation.y, rotation.z));
 		}
 
+		handleAnimations();
+		 
 	};
 
 	virtual void InitBuffers() = 0;
@@ -52,18 +86,20 @@ public:
 		model = glm::scale(model, glm::vec3(x, y, z));
 	};
 
-	virtual void setAnimations(const Animation* animations, int number) {
-		this->animations = (Animation*) calloc(number, sizeof(Animation));
+	virtual void setAnimations(const Animation* animations, int number, bool loopAll = false) {
 		numberOfAnimations = number;
-
-		if (this->animations == nullptr) {
-			throw std::bad_alloc();
-		}
+		
+		this->animations = vector<Animation>();
 
 		for (int i = 0; i < number; i++) {
-			this->animations[i] = animations[i];
+			this->animations.push_back(animations[i]);
 		}
+		loopAllAnimations = loopAll;
+	}
 
+	virtual void AddAnimation(Animation animation) {
+		this->animations.push_back(animation);
+		numberOfAnimations++;
 	}
 
 	bool rotating = false;
@@ -91,9 +127,5 @@ public:
 	}
 
 	static Camera* camera;
-
-	~Object() {
-		delete[] animations;
-	}
 };
 
