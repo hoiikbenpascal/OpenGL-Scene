@@ -25,6 +25,12 @@
     <Filter Include="Header Files\Builders">
       <UniqueIdentifier>{d0aeb17b-bcdd-4688-b3af-a9f78d522766}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\Animation">
+      <UniqueIdentifier>{793f7a66-76a6-4d44-9656-af1052b758f0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Animation">
+      <UniqueIdentifier>{b0d649db-f58b-4fa4-961e-d8b5348f3285}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -58,7 +64,10 @@
       <Filter>Header Files\Builders</Filter>
     </ClCompile>
     <ClCompile Include="Animation.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Source Files\Animation</Filter>
+    </ClCompile>
+    <ClCompile Include="Keyframe.cpp">
+      <Filter>Source Files\Animation</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -89,8 +98,14 @@
     <ClInclude Include="PrimitiveBuilder.h">
       <Filter>Header Files\Builders</Filter>
     </ClInclude>
+    <ClInclude Include="PersonBuilder.h">
+      <Filter>Header Files\Builders</Filter>
+    </ClInclude>
     <ClInclude Include="Animation.h">
-      <Filter>Header Files</Filter>
+      <Filter>Header Files\Animation</Filter>
+    </ClInclude>
+    <ClInclude Include="Keyframe.h">
+      <Filter>Header Files\Animation</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

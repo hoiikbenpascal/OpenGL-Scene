@@ -38,6 +38,8 @@ protected:
 			//if not then go to the next animation if there is one
 			if (currentAnimation + 1 < numberOfAnimations) {
 				currentAnimation++;
+
+				//restart the new animation to make shure the time is properly tracked
 				animations[currentAnimation].Restart();
 				return;
 			}
@@ -86,15 +88,20 @@ public:
 		model = glm::scale(model, glm::vec3(x, y, z));
 	};
 
-	virtual void setAnimations(const Animation* animations, int number, bool loopAll = false) {
-		numberOfAnimations = number;
+	virtual void setAnimations(const vector<Animation> animations, bool loopAll = false) {
+		numberOfAnimations = animations.size();
 		
 		this->animations = vector<Animation>();
 
-		for (int i = 0; i < number; i++) {
+		for (int i = 0; i < animations.size(); i++) {
 			this->animations.push_back(animations[i]);
 		}
 		loopAllAnimations = loopAll;
+	}
+
+	virtual void setAnimation(const Animation animation) {
+		numberOfAnimations = 1;
+		this->animations = { animation };
 	}
 
 	virtual void AddAnimation(Animation animation) {

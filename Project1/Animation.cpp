@@ -5,15 +5,14 @@ std::chrono::steady_clock::time_point Animation::startTime = std::chrono::high_r
 
 void Animation::Apply(glm::mat4* model)
 {
-	if (looped && finished) {
-		Restart();
-	}
+	const glm::vec3 empty;
+	const glm::vec4 empty4;
 
-	//check if the animation is finished
-	if (currentTimeStamp >= timestamps.size()) {
-		finished = true;
-		prevTime = currentTime;
-		return;
+	if (finished) {
+		if (!looped) {
+			return;
+		}
+		Restart();
 	}
 
 	//calculate the time diffrence and the total passed time
@@ -24,20 +23,51 @@ void Animation::Apply(glm::mat4* model)
 	glm::mat4 identity = glm::mat4(1.0f);
 
 	//if the current timestamp is passed proceed to the next one
-	if (totalTime >= timestamps[currentTimeStamp]) {
-		currentTimeStamp++;
+	if (totalTime >= frames[currentKeyframe].time) {
+		currentKeyframe++;
+
+		//restart the time counter since every keyframe has it's own time variable
+		totalTime = 0;
 	}
 
-	if (scale.size() > currentTimeStamp) {
-		*model *= glm::scale(*model, scale[currentTimeStamp] * deltaTime);
+	//check if the animation is finished
+	if (currentKeyframe >= frames.size()) {
+		finished = true;
+		prevTime = currentTime;
+		return;
 	}
-	if (transform.size() > currentTimeStamp) { 
-		*model = glm::translate(identity, transform[currentTimeStamp] * deltaTime) * *model;
+
+	//scale
+	if (frames[currentKeyframe].scale != empty) {
+		*model *= glm::scale(*model, frames[currentKeyframe].scale * deltaTime); 
 	}
-	if (rotation.size() > currentTimeStamp) {
-		*model = glm::rotate(*model, glm::radians(rotation[currentTimeStamp].w * deltaTime), glm::vec3(rotation[currentTimeStamp].x, rotation[currentTimeStamp].y, rotation[currentTimeStamp].z));
+
+	//translate
+	if (frames[currentKeyframe].translate != empty) { 
+		*model = glm::translate(identity, frames[currentKeyframe].translate * deltaTime) * *model;
+	}
+
+	//rotate
+	if (frames[currentKeyframe].rotation != empty4) {
+		//if the pivot is empty use the standard function
+		if (frames[currentKeyframe].pivot != empty){
+			*model = glm::rotate(*model, glm::radians(frames[currentKeyframe].rotation.w * deltaTime), glm::vec3(frames[currentKeyframe].rotation.x, frames[currentKeyframe].rotation.y, frames[currentKeyframe].rotation.z));
+		}
+		else {
+			//translate the model to the pivot point, rotate it and translate it back
+			*model = glm::translate(*model, frames[currentKeyframe].pivot);
+			*model = glm::rotate(*model, glm::radians(frames[currentKeyframe].rotation.w * deltaTime), glm::vec3(frames[currentKeyframe].rotation.x, frames[currentKeyframe].rotation.y, frames[currentKeyframe].rotation.z));
+			*model = glm::translate(*model, -frames[currentKeyframe].pivot);
+		}
 	}
 
 	prevTime = currentTime;
 
+}
+
+void Animation::SetAllpivots(glm::vec3 pivot)
+{
+	for (Keyframe frame : frames) {
+		frame.pivot = pivot;
+	}
 }

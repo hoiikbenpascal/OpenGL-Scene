@@ -221,34 +221,3 @@ static PrimitiveObject* CreatePrimitiveObject() {
     return new PrimitiveObject(meshes, mesh_ammount);
 }
 
-static PrimitiveObject* CreatePerson() {
-    const int mesh_ammount = 6;
-    const glm::vec3 skin_color = glm::vec3(0.68f, 0.59f, 0.49f);
-    const glm::vec3 jean_color = glm::vec3(0.42f, 0.43f, 0.91f);
-    const glm::vec3 shirt_color = glm::vec3(0.256f, 0.161f, 0.156f);
-
-    PrimitiveMesh* meshes = new PrimitiveMesh[mesh_ammount]{
-        *CreateSolidRect(1,1,0.5, shirt_color), //body
-
-        *CreateSphere(0.4f, 20, 20, skin_color), //head
-
-        *CreateSolidRect(1.5, 0.2f, 0.2f, jean_color), //legs
-        *CreateSolidRect(1.5, 0.2f, 0.2f, jean_color),
-
-        *CreateSolidRect(1.1, 0.15f, 0.15f, skin_color), //arms
-        *CreateSolidRect(1.1, 0.15f, 0.15f, skin_color),
-    };
-
-    meshes[1].Move(0, 0.75f, 0); //head
-
-    meshes[2].Move(0.25, -1, 0.15); //legs
-    meshes[3].Move(-0.25, -1, 0.15);
-    
-    meshes[4].Move(1, 0.4, 0); //arms
-    meshes[4].Rotate(1, 1, 0, 180);
-    meshes[5].Move(-1, 0.4, 0); 
-    meshes[5].Rotate(1, 1, 0, 180);
-
-    return new PrimitiveObject(meshes, mesh_ammount);
-}
-

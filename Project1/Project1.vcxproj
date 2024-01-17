@@ -131,6 +131,7 @@
     <ClCompile Include="Animation.cpp" />
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="glsl.cpp" />
+    <ClCompile Include="Keyframe.cpp" />
     <ClCompile Include="LoadedObject.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Object.cpp" />
@@ -144,9 +145,11 @@
     <ClInclude Include="Animation.h" />
     <ClInclude Include="Camera.h" />
     <ClInclude Include="glsl.h" />
+    <ClInclude Include="Keyframe.h" />
     <ClInclude Include="LoadedObject.h" />
     <ClInclude Include="Object.h" />
     <ClInclude Include="objloader.h" />
+    <ClInclude Include="PersonBuilder.h" />
     <ClInclude Include="PrimitiveBuilder.h" />
     <ClInclude Include="PrimitiveMesh.h" />
     <ClInclude Include="PrimitiveObject.h" />

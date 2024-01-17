@@ -3,7 +3,8 @@
 #include "PrimitiveMesh.h"
 #include <vector>
 #include "LoadedObject.h"
-#include "PrimitiveBuilder.h"
+#include "PersonBuilder.h"
+#include "Keyframe.h"
 
 
 static PrimitiveMesh* BuildGrass() {
@@ -33,6 +34,10 @@ static PrimitiveMesh* BuildGrass() {
 }
 
 static Animation CreateMovementAnimation() {
+
+    vector<Keyframe> frames(6);
+
+    //this is the way i used to make animations before i transfered it to a keyframe struct
     vector<glm::vec3> transform = {
         glm::vec3(0,0,0),
         glm::vec3(0,0,2.5f),
@@ -50,19 +55,31 @@ static Animation CreateMovementAnimation() {
         glm::vec4(0,1,0,-90),
         glm::vec4(0,1,0,90)
     };
+
     vector<float> timestamps = {
         1,2,3,4,5,6
     };
 
-    Animation animation = Animation();
-    animation.SetTransform(transform);
-    animation.SetRotation(rotation);
-    animation.SetTimeStamps(timestamps);
-    //animation->looped = true;
+    //which is why these for loops are needed
+    for (int i = 0; i < transform.size(); i++) {
+        frames[i].translate = transform[i];
+    }
+
+    for (int i = 0; i < rotation.size(); i++) {
+        frames[i].rotation = rotation[i];
+    }
+    for (int i = 0; i < timestamps.size(); i++) {
+        frames[i].time = timestamps[i];
+    }
+
+    Animation animation(frames);
     return animation;
 }
 
 static Animation CreateHopAnimation(float height = 2.5f) {
+    
+    vector<Keyframe> frames(2);
+    
     vector<glm::vec3> transform = {
         glm::vec3(0,height,0),
         glm::vec3(0,-height,0),
@@ -70,9 +87,16 @@ static Animation CreateHopAnimation(float height = 2.5f) {
     vector<float> timestamps = {
         1,2
     };
-    Animation animation = Animation();
-    animation.SetTransform(transform);
-    animation.SetTimeStamps(timestamps);
+
+    for (int i = 0; i < transform.size(); i++) {
+        frames[i].translate = transform[i];
+    }
+
+    for (int i = 0; i < timestamps.size(); i++) {
+        frames[i].time = timestamps[i];
+    }
+
+    Animation animation(frames);
     return animation;
 }
 
@@ -87,16 +111,16 @@ static std::vector<Object*> CreateObjects() {
     new LoadedObject("Objects/torus.obj", 1024, amb_diff_spec, "Textures/uvtemplate.bmp"),
     CreatePrimitiveObject(),
     BuildGrass(),
-    CreatePerson()
+    CreatePerson() 
     };
 
-    Animation animation = CreateHopAnimation(5);
+    //Animation animation = CreateHopAnimation(5);
     Animation animation2 = CreateMovementAnimation();
-    Animation animations[2] = {animation, animation2};
+    vector<Animation> animations = {animation2};
 
     //objects[0]->Move(0, 0, 0);
     //objects[0]->SetRotation(0,1,0,2);
-    objects[0]->setAnimations(animations, 2, true);
+    objects[0]->setAnimations(animations, 1);
 
     objects[1]->Move(3.5, 0.5f, 0);
     objects[1]->SetRotation(0, 0, 1, 2);
@@ -107,7 +131,7 @@ static std::vector<Object*> CreateObjects() {
     objects[3]->Move(0, -4, 0);
     objects[3]->Scale(1000, 1, 1000);
 
-    objects[4]->Move(0, 10, 0);
+    //objects[4]->Move(0, 10, 0);
 
     return objects;
 }

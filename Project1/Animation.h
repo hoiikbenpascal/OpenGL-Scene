@@ -1,5 +1,8 @@
 #pragma once
 #include <vector>
+#include <iostream>
+#include <map>
+#include "Keyframe.h"
 #include "glsl.h"
 #include <glm/detail/type_vec.hpp>
 #include <glm/detail/type_mat.hpp>
@@ -7,16 +10,11 @@
 
 class Animation
 {
-	vector<glm::vec3> transform;
-	vector<glm::vec4> rotation;
-	vector<glm::vec3> scale;
-
-	vector<float> timestamps;
+	vector<Keyframe> frames;
 
 	float deltaTime;
 	float totalTime;
-	int currentTimeStamp = 0;
-
+	int currentKeyframe = 0;
 
 	std::chrono::steady_clock::time_point currentTime;
 	std::chrono::steady_clock::time_point prevTime = std::chrono::high_resolution_clock::now();
@@ -24,33 +22,42 @@ class Animation
 public:
 
 	void Apply(glm::mat4* model);
+
 	bool finished = false;
 	bool looped = false;
 	 
-	void SetTransform(vector<glm::vec3> transform) {
-		this->transform = transform;
+	Animation() {};
+
+	Animation(Keyframe frame, bool loop = false) {
+		frames = vector<Keyframe>(1);
+		frames[0] = frame;
+		looped = loop;
 	}
 
+	Animation(vector<Keyframe> _frames, bool loop = false)
+	{
+		this->frames = _frames;
+		looped = loop;
+	};
+
+
 	void Restart(int timeStamp = 0) {
-		currentTimeStamp = 0;
+		currentKeyframe = 0;
 		prevTime = std::chrono::high_resolution_clock::now();
 		Animation::startTime = std::chrono::high_resolution_clock::now();
 		finished = false;
 		totalTime = 0;
 	}
 
-	void SetScale(vector<glm::vec3> scale) {
-		this->scale = scale;
+	void SetKeyframes(vector<Keyframe> frames) {
+		this->frames = frames;
 	}
 
-	void SetRotation(vector<glm::vec4> rotation) {
-		this->rotation = rotation;
+	void AddKeyframe(Keyframe frame) {
+		frames.push_back(frame);
 	}
 
-	void SetTimeStamps(vector<float> timeStamps) {
-		this->timestamps = timeStamps;
-	}
-
+	void SetAllpivots(glm::vec3 pivot);
 	static std::chrono::steady_clock::time_point startTime;
 };
 

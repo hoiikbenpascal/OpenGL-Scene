@@ -5,7 +5,7 @@
 #include "glsl.h";
 
 const float NearPlane = 0.1f;
-const float FarPlane = 50;
+const float FarPlane = 1000;
 const float FoV = 45;
 
 void Camera::SetProjection(int WIDTH, int HEIGHT)

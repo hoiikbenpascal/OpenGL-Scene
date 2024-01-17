@@ -10,9 +10,6 @@
 const char* LoadedObject::vertex_shader_path = "Shaders/LoadedObjectShaders/vertexshader.vert";
 const char* LoadedObject::frag_shader_path = "Shaders/LoadedObjectShaders/fragmentshader.frag";
 
-//const char* LoadedObject::vertex_shader_path = "Shaders/TestShaders/vertexshader.vert";
-//const char* LoadedObject::frag_shader_path = "Shaders/TestShaders/fragmentshader.frag";
-
 bool LoadedObject::shaders_made = false;
 GLuint LoadedObject::program_id;
 GLuint LoadedObject::uniform_material_ambient;
