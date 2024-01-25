@@ -36,6 +36,7 @@ public:
 		this->rotation = frame.rotation;
 		this->pivot = frame.pivot;
 		this->scale = frame.scale;
+		this->time = frame.time;
 	}
 
 	//made sure to use nodiscard and const to indicate it returns a new keyframe instead of altering itself

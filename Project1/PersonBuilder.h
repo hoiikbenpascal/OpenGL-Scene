@@ -130,7 +130,7 @@ static PrimitiveObject* CreatePerson() {
     meshes[3].setAnimations(arm_animations_2);
     //create_forward_turn_back_animation();
 
-    Animation person_movement = create_forward_turn_back_animation();
+    Animation person_movement = create_forward_turn_back_animation({0,0,5}, 5, 1);
 
 #pragma endregion
 
