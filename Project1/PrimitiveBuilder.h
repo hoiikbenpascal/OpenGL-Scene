@@ -167,12 +167,12 @@ static PrimitiveMesh* CreateSphere(float radius,uint16_t stacks, uint16_t slices
             float sliceNormalized = static_cast<float>(slice) / static_cast<float>(slices);
             float sliceAngle = sliceNormalized * 2.0f * PI; // Longitude angle
 
-            // Calculate vertex position
+            // Calculate vertex delta_position
             float x = radius * std::sin(stackAngle) * std::cos(sliceAngle);
             float y = radius * std::cos(stackAngle);
             float z = radius * std::sin(stackAngle) * std::sin(sliceAngle);
 
-            // Add vertex position to the array
+            // Add vertex delta_position to the array
             vertices[vertexIndex++] = x;
             vertices[vertexIndex++] = y;
             vertices[vertexIndex++] = z;

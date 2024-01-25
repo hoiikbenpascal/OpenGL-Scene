@@ -10,21 +10,33 @@
 
 class Animation
 {
+	bool paused = false;
+
 	vector<Keyframe> frames;
 
-	float deltaTime;
-	float totalTime;
-	int currentKeyframe = 0;
+	glm::vec3 total_translation = glm::vec3();
+
+	float deltaTime = 0;
+	float totalTime = 0;
+	int current_frame_index = 0;
+	Keyframe* current_frame = nullptr;
 
 	std::chrono::steady_clock::time_point currentTime;
 	std::chrono::steady_clock::time_point prevTime = std::chrono::high_resolution_clock::now();
 
+	void handle_frames();
+	void handle_animating(glm::mat4* model);
+	void handle_time();
+
 public:
+
+	glm::vec3* movement = nullptr;
+
+	bool looped = false;
+	bool finished = false;
 
 	void Apply(glm::mat4* model);
 
-	bool finished = false;
-	bool looped = false;
 	 
 	Animation() {};
 
@@ -40,17 +52,14 @@ public:
 		looped = loop;
 	};
 
-
-	void Restart(int timeStamp = 0) {
-		currentKeyframe = 0;
-		prevTime = std::chrono::high_resolution_clock::now();
-		Animation::startTime = std::chrono::high_resolution_clock::now();
-		finished = false;
-		totalTime = 0;
+	~Animation() {
+		delete current_frame;
 	}
 
-	void SetKeyframes(vector<Keyframe> frames) {
-		this->frames = frames;
+	void Restart(int timeStamp = 0);
+
+	void SetKeyframes(vector<Keyframe> _frames) {
+		this->frames = _frames;
 	}
 
 	void AddKeyframe(Keyframe frame) {
@@ -58,6 +67,15 @@ public:
 	}
 
 	void SetAllpivots(glm::vec3 pivot);
+
+	void pause() {
+		paused = true;
+	}
+
+	void unpause() {
+		paused = false;
+	}
+
 	static std::chrono::steady_clock::time_point startTime;
 };
 

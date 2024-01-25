@@ -14,7 +14,7 @@ static vector<Animation> create_swing_animations(bool reversed = false, glm::vec
         totalRotation = -totalRotation;
     }
 
-    //set the initial position of the swing
+    //set the initial delta_position of the swing
     Keyframe init = Keyframe(glm::vec4(1, 0, 0, -totalRotation), 0.5f, pivot);
 
     //do the actual swing
@@ -32,24 +32,27 @@ static vector<Animation> create_swing_animations(bool reversed = false, glm::vec
     return animations;
 }
 
-static Animation create_forward_animation(glm::vec3 movement = {0,0,0}) {
-    Keyframe frame;
-
-    frame.translate = movement;
-    frame.time = 1;
+static Animation create_forward_animation(glm::vec3 movement = {0,0,1}) {
+    Keyframe frame = Keyframe(movement, 1);
 
     Animation animation;
     animation.AddKeyframe(frame);
     return animation;
 }
 
+static Animation Create_flip_animation(glm::vec4 rotation = {0,1,0, 180}, float time = 1) {
+    Keyframe flip = Keyframe(rotation, time);
+
+    return Animation(flip, true);
+}
+
 //just to clarify this animation could be done in a single animation, however i felt this would be easier
-static Animation create_forward_turn_back_animation(glm::vec3 movement = {0,0,1}, float time = 1, float flipTime = 2) {
+static Animation create_forward_turn_back_animation(glm::vec3 movement = {0,0,1}, float time = 1, float flipTime = 1) {
     const float flip_angle = 180;
 
     vector<Keyframe> frames(4);
 
-    Keyframe flip = Keyframe(glm::vec4(1,0,0, flip_angle), flipTime);
+    Keyframe flip = Keyframe(glm::vec4(0,1,0, flip_angle), flipTime);
 
     Keyframe move_forward = Keyframe(movement, time);
     Keyframe move_backward = Keyframe(-movement, time);
@@ -59,9 +62,7 @@ static Animation create_forward_turn_back_animation(glm::vec3 movement = {0,0,1}
     frames[2] = move_backward;
     frames[3] = flip;
 
-    Animation move;
-    move.SetKeyframes(frames);
-    return move;
+    return Animation(frames, true);
 }
 
 static PrimitiveObject* CreatePerson() {
@@ -126,6 +127,7 @@ static PrimitiveObject* CreatePerson() {
 
     meshes[2].setAnimations(arm_animations_1);
     meshes[3].setAnimations(arm_animations_2);
+    //create_forward_turn_back_animation();
 
     Animation person_movement = create_forward_turn_back_animation();
 
@@ -133,6 +135,7 @@ static PrimitiveObject* CreatePerson() {
 
     PrimitiveObject* person = new PrimitiveObject(meshes, mesh_ammount);
     person->setAnimation(person_movement);
+    person->Move(0, 0, 3);
 
     return person;
 }

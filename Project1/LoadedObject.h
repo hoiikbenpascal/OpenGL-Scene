@@ -14,7 +14,7 @@ class LoadedObject : public Object
 	vector<glm::vec3> normals;
 	vector<glm::vec3> vertices;
 	vector<glm::vec2> uvs;
-	glm::vec3 position;
+	glm::vec3 delta_position;
 	GLuint texture_id;
 
 

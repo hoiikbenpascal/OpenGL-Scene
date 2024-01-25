@@ -35,42 +35,24 @@ static PrimitiveMesh* BuildGrass() {
 
 static Animation CreateMovementAnimation() {
 
-    vector<Keyframe> frames(6);
+    float time = 1;
+    
+    glm::vec4 rotation = { 0,1,0, -90 };
+    glm::vec3 move_back = { 0,0,2.5 };
+    glm::vec3 move_up = { 0,2.5,0 };
 
-    //this is the way i used to make animations before i transfered it to a keyframe struct
-    vector<glm::vec3> transform = {
-        glm::vec3(0,0,0),
-        glm::vec3(0,0,2.5f),
-        glm::vec3(0,0,0),
-        glm::vec3(0,2.5,0),
-        glm::vec3(0,-2.5,0),
-        glm::vec3(0,0,-2.5),
+    //could have made all this in the vector constructor but this made it more readable
+    Keyframe move_back_and_rotate = Keyframe(move_back, rotation, time);
+    Keyframe move_up_and_rotate = Keyframe(move_up, rotation, time);
+    Keyframe move_down_and_rotate = Keyframe(move_up * -1.0f, rotation, time);
+    Keyframe move_forward_and_rotate = Keyframe(move_back * -1.0f, rotation, time);
+    
+    vector<Keyframe> frames = {
+        move_back_and_rotate,
+        move_up_and_rotate,
+        move_up_and_rotate.flip(),
+        move_forward_and_rotate
     };
-
-    vector<glm::vec4> rotation = {
-        glm::vec4(0,1,0,-90),
-        glm::vec4(0,1,0,90),
-        glm::vec4(0,1,0,-90),
-        glm::vec4(0,1,0,90),
-        glm::vec4(0,1,0,-90),
-        glm::vec4(0,1,0,90)
-    };
-
-    vector<float> timestamps = {
-        1,2,3,4,5,6
-    };
-
-    //which is why these for loops are needed
-    for (int i = 0; i < transform.size(); i++) {
-        frames[i].translate = transform[i];
-    }
-
-    for (int i = 0; i < rotation.size(); i++) {
-        frames[i].rotation = rotation[i];
-    }
-    for (int i = 0; i < timestamps.size(); i++) {
-        frames[i].time = timestamps[i];
-    }
 
     Animation animation(frames);
     return animation;
@@ -121,6 +103,7 @@ static std::vector<Object*> CreateObjects() {
     //objects[0]->Move(0, 0, 0);
     //objects[0]->SetRotation(0,1,0,2);
     objects[0]->setAnimations(animations, 1);
+    objects[0]->Move(0, 10, 0);
 
     objects[1]->Move(3.5, 0.5f, 0);
     objects[1]->SetRotation(0, 0, 1, 2);
