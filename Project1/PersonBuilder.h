@@ -9,18 +9,19 @@
 /// <returns>a vecotr of animations where 0-1 are the arms 2-3</returns>
 static vector<Animation> create_swing_animations(bool reversed = false, glm::vec3 pivot = {}, float totalRotation = 45) {
     vector<Animation> animations(2);
+    float time = 1;
 
     if (reversed) {
         totalRotation = -totalRotation;
     }
 
     //set the initial delta_position of the swing
-    Keyframe init = Keyframe(glm::vec4(1, 0, 0, -totalRotation), 0.5f, pivot);
+    Keyframe init = Keyframe(glm::vec4(1, 0, 0, -totalRotation / 2), time /2, pivot);
 
     //do the actual swing
     vector<Keyframe> swing = {
-        Keyframe(glm::vec4(1, 0, 0, totalRotation), 1, pivot),
-        Keyframe(glm::vec4(1, 0, 0, -totalRotation), 1, pivot)
+        Keyframe(glm::vec4(1, 0, 0, totalRotation), time , pivot),
+        Keyframe(glm::vec4(1, 0, 0, -totalRotation), time, pivot)
     };
 
     Animation start_swing = Animation(init);

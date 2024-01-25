@@ -59,8 +59,8 @@ void PrimitiveObject::Render()
 	glm::mat4* animated_model = handle_animations();
 
 	for (int mesh = 0; mesh < meshes_ammount; mesh++) {
-		meshes[mesh].ApplyModel(&tempModel);
 		meshes[mesh].ApplyModel(animated_model);
+		meshes[mesh].ApplyModel(&tempModel);
 		meshes[mesh].Render();
 	}
 	
