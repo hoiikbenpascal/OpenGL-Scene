@@ -11,10 +11,10 @@ glm::mat4* PrimitiveObject::handle_animations() {
 
 		//loop or increment animations
 		if (animations[currentAnimation].finished) {
+			animations[currentAnimation].Restart();
 			if (!animations[currentAnimation].looped) {
 			currentAnimation++;
 			}
-			animations[currentAnimation].Restart();
 		}
 
 	}
@@ -50,17 +50,17 @@ PrimitiveObject::PrimitiveObject(std::vector<PrimitiveMesh> meshes)
 void PrimitiveObject::Render()
 {
 
-	glm::mat4 tempModel;
-	//rotate the mesh
+
+	//rotate the mesh some old code from before animations
 	if (rotating) {
-		tempModel = glm::rotate(model, (rotation.w * ROTATION_SCALER), glm::vec3(rotation.x, rotation.y, rotation.z));
+		model = glm::rotate(glm::mat4(1.0f), (rotation.w * ROTATION_SCALER), glm::vec3(rotation.x, rotation.y, rotation.z));
 	}
 
 	glm::mat4* animated_model = handle_animations();
 
 	for (int mesh = 0; mesh < meshes_ammount; mesh++) {
 		meshes[mesh].ApplyModel(animated_model);
-		meshes[mesh].ApplyModel(&tempModel);
+		meshes[mesh].ApplyModel(&model);
 		meshes[mesh].Render();
 	}
 	

@@ -12,15 +12,12 @@ void Animation::Apply(glm::mat4* model)
 	//currentFrame should change here
 	handle_frames();
 
-	if (paused) {
-		prevTime = currentTime;
-		return;
-	}
-
 	if (finished) {
 		if (!looped) {
+			prevTime = currentTime;
 			return;
 		}
+		prevTime = currentTime;
 		Restart();
 		return;
 	}
@@ -39,6 +36,7 @@ void Animation::Restart(int timeStamp)
 	Animation::startTime = std::chrono::high_resolution_clock::now();
 	finished = false;
 	totalTime = 0;
+	delete current_frame;
 	current_frame = nullptr;
 }
 
@@ -59,10 +57,18 @@ void Animation::handle_time() {
 
 void Animation::handle_frames()
 {
-	//check if the frame exists by checking the time since it can't be 0 on an actual animation
+	//check if the frame exists
 	if (current_frame == nullptr) {
+		//start witht he first frame
+		//this pointer is destroyed when the animation is destroyed or reset
 		current_frame = new Keyframe(frames[current_frame_index]);
+
+		//set the initial movement in case the object was moved before the animation started
+		if (movement != nullptr) {
+			current_frame->pivot += *movement;
+		}
 	}
+
 
 	//if the current timestamp is passed proceed to the next one0
 	if (totalTime >= current_frame->time) {
@@ -80,6 +86,7 @@ void Animation::handle_frames()
 
 		*current_frame = frames[current_frame_index];
 
+		//keep track of the total movement of the animation to make sure the rotation is pivoted properly
 		if (movement != nullptr) {
 			*movement += frames[current_frame_index - 1].translate * frames[current_frame_index - 1].time;
 			current_frame->pivot += *movement;

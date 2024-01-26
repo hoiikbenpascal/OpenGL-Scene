@@ -42,9 +42,25 @@ static Animation create_forward_animation(glm::vec3 movement = {0,0,1}) {
 }
 
 static Animation Create_flip_animation(glm::vec4 rotation = {0,1,0, 180}, float time = 1) {
+    
     Keyframe flip = Keyframe(rotation, time);
+    Keyframe wait = Keyframe(1);
 
-    return Animation(flip, true);
+    vector<Keyframe> flips = {
+        flip,
+        wait,
+        flip,
+        wait,
+        flip,
+        wait,
+        flip,
+        wait,
+        flip,
+        wait,
+        flip
+    };
+
+    return Animation(flips);
 }
 
 //just to clarify this animation could be done in a single animation, however i felt this would be easier
@@ -130,13 +146,13 @@ static PrimitiveObject* CreatePerson() {
     meshes[3].setAnimations(arm_animations_2);
     //create_forward_turn_back_animation();
 
-    Animation person_movement = create_forward_turn_back_animation({0,0,5}, 5, 1);
+    Animation person_movement = Create_flip_animation(glm::vec4(0,1,0, 180), 1);//create_forward_turn_back_animation({0,0,5}, 2, 1);
 
 #pragma endregion
 
     PrimitiveObject* person = new PrimitiveObject(meshes, mesh_ammount);
+    person->Move(0, 0, 3);  
     person->setAnimation(person_movement);
-    person->Move(0, 0, 3);
 
     return person;
 }

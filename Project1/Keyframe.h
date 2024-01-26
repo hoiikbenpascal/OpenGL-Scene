@@ -16,6 +16,8 @@ public:
 
 	Keyframe() { time = -1; };
 
+	Keyframe(float time) { this->time = time; };
+
 	//create only movement
 	Keyframe(glm::vec3 _translate, float _time) : translate(_translate), time(_time) {};
 
