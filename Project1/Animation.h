@@ -8,25 +8,24 @@
 #include <glm/detail/type_mat.hpp>
 #include <chrono>
 
+
 class Animation
 {
-	bool paused = false;
+	bool started = false;
+	std::chrono::steady_clock::time_point startTime;
+
 
 	vector<Keyframe> frames;
 
-	glm::vec3 total_translation = glm::vec3();
+	void start_animation(Keyframe* frame);
 
-	float deltaTime = 0;
-	float totalTime = 0;
-	int current_frame_index = 0;
-	Keyframe* current_frame = nullptr;
+	static void Apply_frame(glm::mat4* model, float delta_time, const Keyframe* current_frame, bool repeated = false, glm::vec3* movement = nullptr);
 
-	std::chrono::steady_clock::time_point currentTime;
-	std::chrono::steady_clock::time_point prevTime = std::chrono::high_resolution_clock::now();
-
-	void handle_frames();
-	void handle_animating(glm::mat4* model);
-	void handle_time();
+	float handle_time(std::chrono::high_resolution_clock::time_point);
+	void handle_animating(glm::mat4* model, float total_elapsed_time, Keyframe* frame);
+	
+	//applies all the previos keyframes and returns te time that was left over after applying the animations
+	float apply_prev_frames(glm::mat4* model, float total_elapsed_time, Keyframe* frame);
 
 public:
 
@@ -35,9 +34,8 @@ public:
 	bool looped = false;
 	bool finished = false;
 
-	void Apply(glm::mat4* model);
+	glm::mat4 Apply(const glm::mat4* base_model);
 
-	 
 	Animation() {};
 
 	Animation(Keyframe frame, bool loop = false) {
@@ -52,10 +50,6 @@ public:
 		looped = loop;
 	};
 
-	~Animation() {
-		delete current_frame;
-	}
-
 	void Restart(int timeStamp = 0);
 
 	void SetKeyframes(vector<Keyframe> _frames) {
@@ -68,14 +62,5 @@ public:
 
 	void SetAllpivots(glm::vec3 pivot);
 
-	void pause() {
-		paused = true;
-	}
-
-	void unpause() {
-		paused = false;
-	}
-
-	static std::chrono::steady_clock::time_point startTime;
 };
 

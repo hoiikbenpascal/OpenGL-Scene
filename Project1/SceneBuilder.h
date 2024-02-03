@@ -60,23 +60,11 @@ static Animation CreateMovementAnimation() {
 
 static Animation CreateHopAnimation(float height = 2.5f) {
     
-    vector<Keyframe> frames(2);
-    
-    vector<glm::vec3> transform = {
-        glm::vec3(0,height,0),
-        glm::vec3(0,-height,0),
+    vector<Keyframe> frames = {
+        Keyframe({ 0,5,0 }, 1),
+        Keyframe({ 0,-5,0 }, 1),
+        Keyframe({ 0,-5,0 }, 1)
     };
-    vector<float> timestamps = {
-        1,2
-    };
-
-    for (int i = 0; i < transform.size(); i++) {
-        frames[i].translate = transform[i];
-    }
-
-    for (int i = 0; i < timestamps.size(); i++) {
-        frames[i].time = timestamps[i];
-    }
 
     Animation animation(frames);
     return animation;
@@ -91,28 +79,27 @@ static std::vector<Object*> CreateObjects() {
     objects = std::vector<Object*>{
     new LoadedObject("Objects/teapot.obj", 100, amb_diff_spec, "Textures/Yellobrk.bmp"),
     new LoadedObject("Objects/torus.obj", 1024, amb_diff_spec, "Textures/uvtemplate.bmp"),
-    CreatePrimitiveObject(),
-    BuildGrass(),
+    //CreatePrimitiveObject(),
+    //BuildGrass(),
     CreatePerson() 
     };
 
-    //Animation animation = CreateHopAnimation(5);
-    Animation animation2 = CreateMovementAnimation();
-    vector<Animation> animations = {animation2};
+    vector<Animation> animations = {
+        CreateMovementAnimation()
+        //CreateHopAnimation(5)
+    };
 
     //objects[0]->Move(0, 0, 0);
     //objects[0]->SetRotation(0,1,0,2);
     objects[0]->setAnimations(animations, 1);
-    objects[0]->Move(0, 10, 0);
+    objects[0]->Move(0, 0, 0);
 
     objects[1]->Move(3.5, 0.5f, 0);
-    objects[1]->SetRotation(0, 0, 1, 2);
 
     objects[2]->Move(-3.5, -0.5f, 0);
-    objects[2]->SetRotation(1, 0, 0, 0.05f);
 
-    objects[3]->Move(0, -4, 0);
-    objects[3]->Scale(1000, 1, 1000);
+    //objects[3]->Move(0, -4, 0);
+    //objects[3]->Scale(1000, 1, 1000);
 
     //objects[4]->Move(0, 10, 0);
 

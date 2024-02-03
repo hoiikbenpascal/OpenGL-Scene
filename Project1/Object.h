@@ -10,6 +10,8 @@
 class Object
 {
 
+	void applyAnimationToBaseModel();
+
 protected:
 	bool loopAllAnimations = false;
 
@@ -23,6 +25,7 @@ public:
 	bool rotating = false;
 
 	glm::mat4 model;
+	glm::mat4 base_model;
 	glm::vec4 rotation;
 	unsigned short numberOfAnimations = 0;
 	unsigned short currentAnimation = 0;
@@ -33,16 +36,16 @@ public:
 	virtual void InitBuffers() = 0;
 
 	virtual	void Move(float x, float y, float z) {
-		model = glm::translate(model, glm::vec3(x, y, z));
+		base_model = glm::translate(base_model, glm::vec3(x, y, z));
 	}
 
 	virtual void Rotate(float x, float y, float z, float angle) {
 		angle = glm::radians(angle);
-		model = glm::rotate(model, angle, glm::vec3(x, y, z));
+		base_model = glm::rotate(base_model, angle, glm::vec3(x, y, z));
 	};
 
 	virtual void Scale(float x, float y, float z) {
-		model = glm::scale(model, glm::vec3(x, y, z));
+		base_model = glm::scale(base_model, glm::vec3(x, y, z));
 	};
 
 	virtual void setAnimations(const vector<Animation> animations, bool loopAll = false);
@@ -50,18 +53,6 @@ public:
 	virtual void setAnimation(Animation animation);
 
 	virtual void AddAnimation(Animation animation);
-
-
-	virtual void SetRotation(float x, float y, float z, float angle)
-	{
-		if (x, y, z, angle == 0)
-		{
-			rotating = false;
-			return;
-		}
-		this->rotation = glm::vec4(x, y, z, angle);
-		rotating = true;
-	};
 
 	static void InitShaders(const char* vertex_shader_path,const char* frag_shader_path, GLuint* program_id)
 	{

@@ -5,31 +5,33 @@ Camera* Object::camera;
 
 void Object::handleAnimations()
 {
+	model = base_model;
 	//if there are no animations to handle
 	if (numberOfAnimations <= 0) {
 		return;
 	}
 
-
 	//if the animation isn't finished then just return
 	if (!this->animations[currentAnimation].finished) {
 		//apply the animation
-		animations[currentAnimation].Apply(&model);
+		model = animations[currentAnimation].Apply(&base_model);
 		return;
 	}
 
-	//check if the animation should be looped or not
+	//if the animation finished then apply the full animation to the base model
+	base_model = animations[currentAnimation].Apply(&base_model);
+
+	////check if the animation should be looped or not
 	if (this->animations[currentAnimation].looped) {
 		this->animations[currentAnimation].Restart();
+		model = animations[currentAnimation].Apply(&base_model);
 		return;
 	}
 
 	//if not then go to the next animation if there is one
 	if (currentAnimation + 1 < numberOfAnimations) {
 		currentAnimation++;
-
-		//restart the new animation to make shure the time is properly tracked
-		animations[currentAnimation].Restart();
+		model = animations[currentAnimation].Apply(&base_model);
 		return;
 	}
 
@@ -39,6 +41,7 @@ void Object::handleAnimations()
 		for (int i = 0; i < numberOfAnimations; i++) {
 			animations[i].Restart();
 		}
+		model = animations[currentAnimation].Apply(&base_model);
 	}
 }
 

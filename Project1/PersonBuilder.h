@@ -7,7 +7,7 @@
 /// creates the animations for the person walking
 /// </summary>
 /// <returns>a vecotr of animations where 0-1 are the arms 2-3</returns>
-static vector<Animation> create_swing_animations(bool reversed = false, glm::vec3 pivot = {}, float totalRotation = 45) {
+static vector<Animation> create_swing_animations(bool reversed = false, glm::vec3 pivot = {}, float totalRotation = 45, float InitialSwingDivider = 2) {
     vector<Animation> animations(2);
     float time = 1;
 
@@ -15,8 +15,8 @@ static vector<Animation> create_swing_animations(bool reversed = false, glm::vec
         totalRotation = -totalRotation;
     }
 
-    //set the initial delta_position of the swing
-    Keyframe init = Keyframe(glm::vec4(1, 0, 0, -totalRotation / 2), time /2, pivot);
+    //set the initial delta_position of the swing this also determines how far the arms and legs swing back
+    Keyframe init = Keyframe(glm::vec4(1, 0, 0, -totalRotation / InitialSwingDivider), time /2, pivot);
 
     //do the actual swing
     vector<Keyframe> swing = {
@@ -60,7 +60,7 @@ static Animation Create_flip_animation(glm::vec4 rotation = {0,1,0, 180}, float 
         flip
     };
 
-    return Animation(flips);
+    return Animation(flips, true);
 }
 
 //just to clarify this animation could be done in a single animation, however i felt this would be easier
@@ -109,6 +109,9 @@ static PrimitiveObject* CreatePerson() {
         *CreateSphere(0.4f, 20, 20, skin_color), //head
 
         *CreateSolidRect(torsoSize,torsoSize, torsoSize * 0.5f, shirt_color), //body
+
+        ////angle indicator
+        //*CreateSolidRect(0.2,0.2, 10),
     };
 
 #pragma endregion
@@ -144,14 +147,15 @@ static PrimitiveObject* CreatePerson() {
 
     meshes[2].setAnimations(arm_animations_1);
     meshes[3].setAnimations(arm_animations_2);
-    //create_forward_turn_back_animation();
+    //Create_flip_animation(glm::vec4(0,1,0, 720), 1);
+    //create_forward_turn_back_animation({0,0,5}, 2, 1);
 
-    Animation person_movement = Create_flip_animation(glm::vec4(0,1,0, 180), 1);//create_forward_turn_back_animation({0,0,5}, 2, 1);
+    Animation person_movement = Create_flip_animation(glm::vec4(0,1,0, 720), 1);
 
 #pragma endregion
 
     PrimitiveObject* person = new PrimitiveObject(meshes, mesh_ammount);
-    person->Move(0, 0, 3);  
+    //person->Move(0, 0, 3);  
     person->setAnimation(person_movement);
 
     return person;
