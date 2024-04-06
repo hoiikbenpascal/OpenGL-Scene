@@ -38,10 +38,16 @@ void Animation::start_animation(Keyframe* frame) {
 		startTime = std::chrono::high_resolution_clock::now();
 		started = true;
 		*frame = frames[0];
-		//set the pivot of the first frame in case the object was moved before the animation started
-		if (movement != nullptr) {
-		frame->pivot += *movement;
+}
+
+Animation Animation::FlipRotation() {
+	Animation animation = *this;
+	for (int frame = 0; frame < frames.size(); frame++) {
+		Keyframe currFrame = frames[frame];
+		currFrame.rotation.w = -frames[frame].rotation.w;
+		animation.frames[frame] = currFrame;
 	}
+	return animation;
 }
 
 void Animation::Restart(int timeStamp)
@@ -79,11 +85,7 @@ void Animation::handle_animating(glm::mat4* model, float total_elapsed_time, Key
 	{
 		*frame = frames[current_frame_index];
 
-		if (movement != nullptr) {
-			frame->pivot += *movement;
-		}
-
-		Apply_frame(model, frame->time, frame, true, movement);
+		Apply_frame(model, frame->time, frame, true);
 		elapsed_time += frame->time;
 		current_frame_index++;
 	}
@@ -95,11 +97,11 @@ void Animation::handle_animating(glm::mat4* model, float total_elapsed_time, Key
 
 	*frame = frames[current_frame_index];
 	//apply the current frame based on the time between the frames
-	Apply_frame(model, total_elapsed_time - elapsed_time , frame, false , movement);
+	Apply_frame(model, total_elapsed_time - elapsed_time , frame, false);
 
 }
 
-void Animation::Apply_frame(glm::mat4* model, float delta_time, const Keyframe* current_frame, bool repeated, glm::vec3* movement) {
+void Animation::Apply_frame(glm::mat4* model, float delta_time, const Keyframe* current_frame, bool repeated) {
 
 	const glm::vec3 empty;
 	const glm::vec4 empty4;
@@ -112,9 +114,6 @@ void Animation::Apply_frame(glm::mat4* model, float delta_time, const Keyframe* 
 	//translate
 	if (current_frame->translate != empty) {
 		*model = glm::translate(glm::mat4(1.0f), current_frame->translate * delta_time) * *model;
-		if (movement != nullptr && !repeated) {
-			*movement += current_frame->translate * delta_time;
-		}
 	}
 
 	//rotate

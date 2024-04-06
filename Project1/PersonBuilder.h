@@ -16,7 +16,7 @@ static vector<Animation> create_swing_animations(bool reversed = false, glm::vec
     }
 
     //set the initial delta_position of the swing this also determines how far the arms and legs swing back
-    Keyframe init = Keyframe(glm::vec4(1, 0, 0, -totalRotation / InitialSwingDivider), time /2, pivot);
+    //Keyframe init = Keyframe(glm::vec4(1, 0, 0, -totalRotation / InitialSwingDivider), time /2, pivot);
 
     //do the actual swing
     vector<Keyframe> swing = {
@@ -24,11 +24,12 @@ static vector<Animation> create_swing_animations(bool reversed = false, glm::vec
         Keyframe(glm::vec4(1, 0, 0, -totalRotation), time, pivot)
     };
 
-    Animation start_swing = Animation(init);
-    Animation Swing = Animation(swing, true);
+    //Animation start_swing = Animation(init);
+    Animation Swing = Animation(swing);
 
-    animations[0] = start_swing;
-    animations[1] = Swing;
+    animations[0] = Swing;
+    animations[1] = Swing.FlipRotation();
+
 
     return animations;
 }
@@ -142,21 +143,22 @@ static PrimitiveObject* CreatePerson() {
     vector<Animation> arm_animations_1 = create_swing_animations(false, {0,armheigth/2, 0});
     vector<Animation> arm_animations_2 = create_swing_animations(true, {0,armheigth/2, 0});
 
-    meshes[0].setAnimations(leg_animations_1);
-    meshes[1].setAnimations(leg_animations_2);
+    meshes[0].setAnimations(leg_animations_1, true);
+    meshes[1].setAnimations(leg_animations_2, true);
 
-    meshes[2].setAnimations(arm_animations_1);
-    meshes[3].setAnimations(arm_animations_2);
+    meshes[2].setAnimations(arm_animations_1, true);
+    meshes[3].setAnimations(arm_animations_2, true);
     //Create_flip_animation(glm::vec4(0,1,0, 720), 1);
     //create_forward_turn_back_animation({0,0,5}, 2, 1);
 
-    Animation person_movement = Create_flip_animation(glm::vec4(0,1,0, 720), 1);
+    Animation person_movement = create_forward_turn_back_animation({0,0,5}, 2, 1);
 
 #pragma endregion
 
     PrimitiveObject* person = new PrimitiveObject(meshes, mesh_ammount);
     //person->Move(0, 0, 3);  
     person->setAnimation(person_movement);
+    person->Move(10, 0, 0);
 
     return person;
 }

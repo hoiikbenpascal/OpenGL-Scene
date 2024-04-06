@@ -58,7 +58,7 @@ void PrimitiveObject::Render()
 	Object::handleAnimations();
 
 	for (int mesh = 0; mesh < meshes_ammount; mesh++) {
-		meshes[mesh].ApplyModel(&model);
+ 		meshes[mesh].ApplyModel(&model);
 		meshes[mesh].Render();
 	}
 

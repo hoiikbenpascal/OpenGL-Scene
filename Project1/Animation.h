@@ -19,7 +19,7 @@ class Animation
 
 	void start_animation(Keyframe* frame);
 
-	static void Apply_frame(glm::mat4* model, float delta_time, const Keyframe* current_frame, bool repeated = false, glm::vec3* movement = nullptr);
+	static void Apply_frame(glm::mat4* model, float delta_time, const Keyframe* current_frame, bool repeated = false);
 
 	float handle_time(std::chrono::high_resolution_clock::time_point);
 	void handle_animating(glm::mat4* model, float total_elapsed_time, Keyframe* frame);
@@ -28,8 +28,6 @@ class Animation
 	float apply_prev_frames(glm::mat4* model, float total_elapsed_time, Keyframe* frame);
 
 public:
-
-	glm::vec3* movement = nullptr;
 
 	bool looped = false;
 	bool finished = false;
@@ -62,5 +60,6 @@ public:
 
 	void SetAllpivots(glm::vec3 pivot);
 
+	Animation FlipRotation();
 };
 

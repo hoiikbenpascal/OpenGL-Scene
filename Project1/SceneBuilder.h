@@ -92,16 +92,14 @@ static std::vector<Object*> CreateObjects() {
     //objects[0]->Move(0, 0, 0);
     //objects[0]->SetRotation(0,1,0,2);
     objects[0]->setAnimations(animations, 1);
-    objects[0]->Move(0, 0, 0);
+    //objects[0]->Move(0, 0, 0);
 
     objects[1]->Move(3.5, 0.5f, 0);
 
-    objects[2]->Move(-3.5, -0.5f, 0);
+    objects[2]->Move(5, -0.5f, 0);
 
     //objects[3]->Move(0, -4, 0);
     //objects[3]->Scale(1000, 1, 1000);
-
-    //objects[4]->Move(0, 10, 0);
 
     return objects;
 }
