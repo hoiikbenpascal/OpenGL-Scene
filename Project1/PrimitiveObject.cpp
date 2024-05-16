@@ -55,6 +55,7 @@ void PrimitiveObject::Render()
 		model = glm::rotate(glm::mat4(1.0f), (rotation.w * ROTATION_SCALER), glm::vec3(rotation.x, rotation.y, rotation.z));
 	}
 
+	//TODO: Fix this animation and movement handeling
 	Object::handleAnimations();
 
 	for (int mesh = 0; mesh < meshes_ammount; mesh++) {
@@ -78,7 +79,7 @@ void PrimitiveObject::InitBuffers()
 	for (int mesh = 0; mesh < meshes_ammount; mesh++) {
 		this->meshes[mesh].ApplyModel(&model);
 	}
-	model = glm::mat4(1.0f);
+	//model = glm::mat4(1.0f);
 }
 
 PrimitiveObject::~PrimitiveObject()

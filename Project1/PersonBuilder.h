@@ -85,6 +85,8 @@ static Animation create_forward_turn_back_animation(glm::vec3 movement = {0,0,1}
 
 static PrimitiveObject* CreatePerson() {
 
+#pragma region Create constants
+
     const int mesh_ammount = 6;
     const glm::vec3 skin_color = glm::vec3(0.68f, 0.59f, 0.49f);
     const glm::vec3 jean_color = glm::vec3(0.42f, 0.43f, 0.91f);
@@ -97,6 +99,7 @@ static PrimitiveObject* CreatePerson() {
     const float legSize = 0.2f;
     const float legHeight = 1.5f;
 
+#pragma endregion
 
 #pragma region Create meshes
 
@@ -148,6 +151,7 @@ static PrimitiveObject* CreatePerson() {
 
     meshes[2].setAnimations(arm_animations_1, true);
     meshes[3].setAnimations(arm_animations_2, true);
+
     //Create_flip_animation(glm::vec4(0,1,0, 720), 1);
     //create_forward_turn_back_animation({0,0,5}, 2, 1);
 
@@ -158,7 +162,6 @@ static PrimitiveObject* CreatePerson() {
     PrimitiveObject* person = new PrimitiveObject(meshes, mesh_ammount);
     //person->Move(0, 0, 3);  
     person->setAnimation(person_movement);
-    person->Move(10, 0, 0);
 
     return person;
 }
