@@ -8,6 +8,80 @@ const float NearPlane = 0.1f;
 const float FarPlane = 1000;
 const float FoV = 45;
 
+void Camera::Move(unsigned char key) {
+    switch (key) {
+        //escape
+    case 27:
+        glutExit();
+        break;
+        //move the camera
+    case 'w':
+        Forward();
+        break;
+    case 'W':
+        Forward();
+        break;
+    case 's':
+        Backward();
+        break;
+    case 'S':
+        Backward();
+        break;
+    case 'a':
+        Left();
+        break;
+    case 'A':
+        Left();
+        break;
+    case 'd':
+        Right();
+        break;
+    case 'D':
+        Right();
+        break;
+    case ' ':
+        MoveUp();
+        break;
+    case 'x':
+        MoveDown();
+        break;
+    case 'X':
+        MoveDown();
+        break;
+
+        //roatate the camera
+    case 'i':
+        LookUp();
+        break;
+    case 'I':
+        LookUp();
+        break;
+    case 'j':
+        LookLeft();
+        break;
+    case 'J':
+        LookLeft();
+        break;
+    case 'k':
+        LookDown();
+        break;
+    case 'K':
+        LookDown();
+        break;
+    case 'l':
+        LookRight();
+        break;
+    case 'L':
+        LookRight();
+        break;
+
+        //switch the cameras
+    case 'v':
+        toggle();
+        break;
+    }
+}
+
 void Camera::SetProjection(int WIDTH, int HEIGHT)
 {
 	Projection = glm::perspective(glm::radians(FoV),

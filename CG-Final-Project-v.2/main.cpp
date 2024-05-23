@@ -40,77 +40,7 @@ vector<Object*> objects;
 
 void keyboardHandler(unsigned char key, int a, int b)
 {
-    switch (key) {
-        //escape
-    case 27:
-        glutExit();
-        break;
-        //move the camera
-    case 'w':
-        MainCamera.Forward();
-        break;
-    case 'W':
-        MainCamera.Forward();
-        break;
-    case 's':
-        MainCamera.Backward();
-        break;
-    case 'S':
-        MainCamera.Backward();
-        break;
-    case 'a':
-        MainCamera.Left();
-        break;
-    case 'A':
-        MainCamera.Left();
-        break;
-    case 'd':
-        MainCamera.Right();
-        break;
-    case 'D':
-        MainCamera.Right();
-        break;
-    case ' ':
-        MainCamera.MoveUp();
-        break;
-    case 'x':
-        MainCamera.MoveDown();
-        break;
-    case 'X':
-        MainCamera.MoveDown();
-        break;
-
-        //roatate the camera
-    case 'i':
-        MainCamera.LookUp();
-        break;
-    case 'I':
-        MainCamera.LookUp();
-        break;
-    case 'j':
-        MainCamera.LookLeft();
-        break;
-    case 'J':
-        MainCamera.LookLeft();
-        break;
-    case 'k':
-        MainCamera.LookDown();
-        break;
-    case 'K':
-        MainCamera.LookDown();
-        break;
-    case 'l':
-        MainCamera.LookRight();
-        break;
-    case 'L':
-        MainCamera.LookRight();
-        break;
-
-        //switch the cameras
-    case 'v':
-        MainCamera.toggle();
-        break;
-    }
+    MainCamera.Move(key);
 }
 
 

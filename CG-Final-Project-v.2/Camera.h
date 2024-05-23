@@ -45,6 +45,8 @@ public:
 
 	void toggle();
 
+	void Move(unsigned char key);
+
 	//camera movement
 	void Forward(float movement = 1);
 	void Backward(float movement = 1);
