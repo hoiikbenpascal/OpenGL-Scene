@@ -23,11 +23,9 @@ glm::mat4 Animation::Apply(const glm::mat4* base_model)
 
 	//check if animation is finished and loop it if needed
 	if (finished) {
-		if (!looped) {
-			return model;
+		if (looped) {
+			Restart();
 		}
-		Restart();
-		return model;
 	}
 
 	return model;

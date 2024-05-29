@@ -9,8 +9,7 @@
 
 class Object
 {
-
-	void applyAnimationToBaseModel();
+	bool AllAnimationsFinished = false;
 
 protected:
 	bool loopAllAnimations = false;

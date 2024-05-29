@@ -44,17 +44,15 @@ static Animation CreateMovementAnimation() {
     //could have made all this in the vector constructor but this made it more readable
     Keyframe move_back_and_rotate = Keyframe(move_back, rotation, time);
     Keyframe move_up_and_rotate = Keyframe(move_up, rotation, time);
-    Keyframe move_down_and_rotate = Keyframe(move_up * -1.0f, rotation, time);
-    Keyframe move_forward_and_rotate = Keyframe(move_back * -1.0f, rotation, time);
     
     vector<Keyframe> frames = {
         move_back_and_rotate,
         move_up_and_rotate,
         move_up_and_rotate.flip(),
-        move_forward_and_rotate
+        move_back_and_rotate.flip()
     };
 
-    Animation animation(frames);
+    Animation animation(frames, true);
     return animation;
 }
 
@@ -74,32 +72,22 @@ static std::vector<Object*> CreateObjects() {
 
     glm::vec3 amb_diff_spec[3] = { {0,0,0}, {0,0,0}, glm::vec3(1)};
 
-
-    std::vector<Object*> objects;
-    objects = std::vector<Object*>{
-    new LoadedObject("Objects/teapot.obj", 100, amb_diff_spec, "Textures/Yellobrk.bmp"),
-    new LoadedObject("Objects/torus.obj", 1024, amb_diff_spec, "Textures/uvtemplate.bmp"),
-    //CreatePrimitiveObject(),
-    //BuildGrass(),
-    CreatePerson() 
-    };
+    LoadedObject* teapot = new LoadedObject("Objects/teapot.obj", 100, amb_diff_spec, "Textures/Yellobrk.bmp");
+    LoadedObject* torus = new LoadedObject("Objects/torus.obj", 1024, amb_diff_spec, "Textures/uvtemplate.bmp");
+    PrimitiveObject* person = CreatePerson();
 
     vector<Animation> animations = {
         CreateMovementAnimation()
         //CreateHopAnimation(5)
     };
 
-    //objects[0]->Move(0, 0, 0);
-    //objects[0]->SetRotation(0,1,0,2);
-    objects[0]->setAnimations(animations, 1);
-    //objects[0]->Move(0, 0, 0);
+    teapot->setAnimations(animations);
 
-    objects[1]->Move(3.5, 0.5f, 0);
-
-    objects[2]->Move(5, -0.5f, 0);
-
-    //objects[3]->Move(0, -4, 0);
-    //objects[3]->Scale(1000, 1, 1000);
+    std::vector<Object*> objects = std::vector<Object*>{
+        teapot,
+        torus,
+        person
+    };
 
     return objects;
 }

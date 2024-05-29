@@ -11,6 +11,12 @@ void Object::handleAnimations()
 		return;
 	}
 
+	if (AllAnimationsFinished)
+	{
+		model = animations[currentAnimation].Apply(&base_model);
+		return;
+	}
+
 	//if the animation isn't finished then just return
 	if (!this->animations[currentAnimation].finished) {
 		//apply the animation
@@ -42,7 +48,10 @@ void Object::handleAnimations()
 			animations[i].Restart();
 		}
 		model = animations[currentAnimation].Apply(&base_model);
+		return;
 	}
+
+	AllAnimationsFinished = true;
 }
 
 void Object::Render()
