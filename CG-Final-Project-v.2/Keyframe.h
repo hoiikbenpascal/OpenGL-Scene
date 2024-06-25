@@ -7,14 +7,19 @@
 
 class Keyframe
 {
-public:
-	float time = 1;
 	glm::vec3 translate = glm::vec3();
 	glm::vec4 rotation = glm::vec4();
 	glm::vec3 pivot = glm::vec3();
 	glm::vec3 scale = glm::vec3();
 
-	Keyframe() { time = -1; };
+public:
+
+	float time = 1;
+
+	Keyframe()
+	{
+		time = -1;
+	};
 
 	Keyframe(float time) { this->time = time; };
 
@@ -41,6 +46,8 @@ public:
 		this->time = frame.time;
 	}
 
+	void Apply(glm::mat4* model, float delta_time);
+
 	//made sure to use nodiscard and const to indicate it returns a new keyframe instead of altering itself
 	[[nodiscard]] Keyframe flip() const {
 		//flip around the rotation angle
@@ -48,6 +55,14 @@ public:
 		temp_rotation[3] = rotation[3] * -1;
 
 		return Keyframe(translate * -1.0f, temp_rotation, time);
+	}
+
+	glm::vec4* GetRotation() {
+		return &rotation;
+	}
+
+	glm::vec3* GetPivot() {
+		return &pivot;
 	}
 
 	//also made a static function

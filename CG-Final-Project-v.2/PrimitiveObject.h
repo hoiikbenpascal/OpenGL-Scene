@@ -4,24 +4,24 @@
 #include <vector>
 
 class PrimitiveObject :
-    public Object
+	public Object
 {
 public:
 
 
-    void Render() override;
-    void Move(float x, float y, float z) override;
-    void InitBuffers() override;
+	void Render() override;
+	void Move(float x, float y, float z) override;
+	void InitBuffers() override;
 
-    PrimitiveObject(PrimitiveMesh* meshes,const int ammount);
-    PrimitiveObject(vector<PrimitiveMesh> meshes);
-    ~PrimitiveObject();
+	PrimitiveObject(PrimitiveMesh* meshes, const int ammount);
+	PrimitiveObject(vector<PrimitiveMesh> meshes);
+	~PrimitiveObject();
 
-    void MoveOneMesh(int index, float x,float y,float z);
+	void MoveOneMesh(int index, float x, float y, float z);
 
 private:
-    glm::mat4* handle_animations();
-    PrimitiveMesh* meshes;
-    int meshes_ammount;
+	//glm::mat4* handle_animations();
+	PrimitiveMesh* meshes;
+	int meshes_ammount;
 };
 
