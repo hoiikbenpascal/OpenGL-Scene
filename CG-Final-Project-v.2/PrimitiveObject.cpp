@@ -3,33 +3,7 @@
 
 const float ROTATION_SCALER = 1;
 
-//glm::mat4* PrimitiveObject::handle_animations() {
-//
-//	glm::mat4* animated_model = new glm::mat4(model);
-//	if (currentAnimation < numberOfAnimations) {
-//		animations[currentAnimation].Apply(animated_model);
-//
-//		//loop or increment animations
-//		if (animations[currentAnimation].finished) {
-//			animations[currentAnimation].Restart();
-//			if (!animations[currentAnimation].looped) {
-//			currentAnimation++;
-//			}
-//		}
-//
-//	}
-//	//loop all animations
-//	else if (loopAllAnimations) {
-//		for (Animation animation : animations) {
-//			animation.Restart();
-//		}
-//		currentAnimation = 0;
-//	}
-//	return animated_model;
-//}
-
-
-PrimitiveObject::PrimitiveObject(PrimitiveMesh* meshes,const int ammount)
+PrimitiveObject::PrimitiveObject(PrimitiveMesh* meshes, const int ammount)
 {
 	this->model = glm::mat4(1.0f);
 	this->meshes = meshes;
@@ -45,8 +19,6 @@ PrimitiveObject::PrimitiveObject(std::vector<PrimitiveMesh> meshes)
 
 }
 
-
-
 void PrimitiveObject::Render()
 {
 
@@ -55,11 +27,17 @@ void PrimitiveObject::Render()
 		model = glm::rotate(glm::mat4(1.0f), (rotation.w * ROTATION_SCALER), glm::vec3(rotation.x, rotation.y, rotation.z));
 	}
 
+	glm::mat4 base_mod = model;
+	glm::mat4 mod = glm::inverse(model);
+
 	//TODO: Fix this animation and movement handeling
 	Object::handleAnimations();
 
 	for (int mesh = 0; mesh < meshes_ammount; mesh++) {
- 		meshes[mesh].ApplyModel(&model);
+		meshes[mesh].model = model * meshes[mesh].model;
+		meshes[mesh].handleAnimations();
+		meshes[mesh].model = mod * meshes[mesh].model;
+
 		meshes[mesh].Render();
 	}
 
@@ -67,13 +45,13 @@ void PrimitiveObject::Render()
 
 void PrimitiveObject::Move(float x, float y, float z)
 {
-	Object::Move(x,y,z);
+	Object::Move(x, y, z);
 }
 
 void PrimitiveObject::InitBuffers()
 {
 	for (int mesh = 0; mesh < meshes_ammount; mesh++) {
-		meshes[mesh].InitBuffers();
+		this->meshes[mesh].InitBuffers();
 	}
 
 	for (int mesh = 0; mesh < meshes_ammount; mesh++) {
@@ -87,7 +65,7 @@ PrimitiveObject::~PrimitiveObject()
 	delete[] meshes;
 }
 
-void PrimitiveObject::MoveOneMesh(int index, float x,float y,float z) {
+void PrimitiveObject::MoveOneMesh(int index, float x, float y, float z) {
 	meshes[index].Move(x, y, z);
 }
 

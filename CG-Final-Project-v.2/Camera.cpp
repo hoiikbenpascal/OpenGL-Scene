@@ -9,77 +9,77 @@ const float FarPlane = 1000;
 const float FoV = 45;
 
 void Camera::Move(unsigned char key) {
-    switch (key) {
-        //escape
-    case 27:
-        glutExit();
-        break;
-        //move the camera
-    case 'w':
-        Forward();
-        break;
-    case 'W':
-        Forward();
-        break;
-    case 's':
-        Backward();
-        break;
-    case 'S':
-        Backward();
-        break;
-    case 'a':
-        Left();
-        break;
-    case 'A':
-        Left();
-        break;
-    case 'd':
-        Right();
-        break;
-    case 'D':
-        Right();
-        break;
-    case ' ':
-        MoveUp();
-        break;
-    case 'x':
-        MoveDown();
-        break;
-    case 'X':
-        MoveDown();
-        break;
+	switch (key) {
+		//escape
+	case 27:
+		glutExit();
+		break;
+		//move the camera
+	case 'w':
+		Forward();
+		break;
+	case 'W':
+		Forward();
+		break;
+	case 's':
+		Backward();
+		break;
+	case 'S':
+		Backward();
+		break;
+	case 'a':
+		Left();
+		break;
+	case 'A':
+		Left();
+		break;
+	case 'd':
+		Right();
+		break;
+	case 'D':
+		Right();
+		break;
+	case ' ':
+		MoveUp();
+		break;
+	case 'x':
+		MoveDown();
+		break;
+	case 'X':
+		MoveDown();
+		break;
 
-        //roatate the camera
-    case 'i':
-        LookUp();
-        break;
-    case 'I':
-        LookUp();
-        break;
-    case 'j':
-        LookLeft();
-        break;
-    case 'J':
-        LookLeft();
-        break;
-    case 'k':
-        LookDown();
-        break;
-    case 'K':
-        LookDown();
-        break;
-    case 'l':
-        LookRight();
-        break;
-    case 'L':
-        LookRight();
-        break;
+		//roatate the camera
+	case 'i':
+		LookUp();
+		break;
+	case 'I':
+		LookUp();
+		break;
+	case 'j':
+		LookLeft();
+		break;
+	case 'J':
+		LookLeft();
+		break;
+	case 'k':
+		LookDown();
+		break;
+	case 'K':
+		LookDown();
+		break;
+	case 'l':
+		LookRight();
+		break;
+	case 'L':
+		LookRight();
+		break;
 
-        //switch the cameras
-    case 'v':
-        toggle();
-        break;
-    }
+		//switch the cameras
+	case 'v':
+		toggle();
+		break;
+	}
 }
 
 void Camera::SetProjection(int WIDTH, int HEIGHT)
@@ -134,22 +134,39 @@ void Camera::toggle() {
 }
 
 void Camera::Forward(float movement) {
-		glm::vec3 total = glm::normalize(pos - lookingAt) * movement;
-		pos -= total;
-		lookingAt -= total;
+	//drone mode
+	glm::vec3 total = glm::normalize(pos - lookingAt) * movement;
+
+	if (Mode) {
+		//walk mode
+		total.y = 0;
+	}
+	pos -= total;
+	lookingAt -= total;
 }
 
 void Camera::Backward(float movement)
 {
-		glm::vec3 total = glm::normalize(pos - lookingAt) * movement;
-		pos += total;
-		lookingAt += total;
+	glm::vec3 total = glm::normalize(pos - lookingAt) * movement;
+
+	if (Mode) {
+		//walk mode
+		total.y = 0;
+	}
+	pos += total;
+	lookingAt += total;
 }
 
 void Camera::Left(float movement) {
 	glm::vec3 dir = glm::normalize(pos - lookingAt);
 	glm::vec3 up = glm::vec3(0, 1, 0);
 	glm::vec3 right = glm::normalize(glm::cross(up, dir));
+
+	if (Mode) {
+		//walk mode
+		right.y = 0;
+	}
+
 	pos -= right;
 	lookingAt -= right;
 }
@@ -158,16 +175,26 @@ void Camera::Right(float movement) {
 	glm::vec3 dir = glm::normalize(pos - lookingAt);
 	glm::vec3 up = glm::vec3(0, 1, 0);
 	glm::vec3 right = glm::normalize(glm::cross(up, dir));
+
+	if (Mode) {
+		//walk mode
+		right.y = 0;
+	}
+
 	pos += right;
 	lookingAt += right;
 }
 
 void Camera::MoveUp(float movement) {
+	//walkmode can't go up
+	if (Mode) { return; }
 	pos += oriantation * movement;
 	lookingAt += oriantation * movement;
 }
 
 void Camera::MoveDown(float movement) {
+	//walkmode can't go down
+	if (Mode) { return; }
 	pos -= oriantation * movement;
 	lookingAt -= oriantation * movement;
 }

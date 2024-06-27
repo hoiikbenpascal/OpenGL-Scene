@@ -5,7 +5,6 @@ Camera* Object::camera;
 
 void Object::handleAnimations()
 {
-	model = base_model;
 	//if there are no animations to handle
 	if (numberOfAnimations <= 0) {
 		return;
@@ -13,31 +12,25 @@ void Object::handleAnimations()
 
 	if (AllAnimationsFinished)
 	{
-		model = animations[currentAnimation].Apply(&base_model);
 		return;
 	}
 
 	//if the animation isn't finished then just return
 	if (!this->animations[currentAnimation].finished) {
 		//apply the animation
-		model = animations[currentAnimation].Apply(&base_model);
+		animations[currentAnimation].Apply(&model);
 		return;
 	}
-
-	//if the animation finished then apply the full animation to the base model
-	base_model = animations[currentAnimation].Apply(&base_model);
 
 	////check if the animation should be looped or not
 	if (this->animations[currentAnimation].looped) {
 		this->animations[currentAnimation].Restart();
-		model = animations[currentAnimation].Apply(&base_model);
 		return;
 	}
 
 	//if not then go to the next animation if there is one
 	if (currentAnimation + 1 < numberOfAnimations) {
 		currentAnimation++;
-		model = animations[currentAnimation].Apply(&base_model);
 		return;
 	}
 
@@ -47,7 +40,7 @@ void Object::handleAnimations()
 		for (int i = 0; i < numberOfAnimations; i++) {
 			animations[i].Restart();
 		}
-		model = animations[currentAnimation].Apply(&base_model);
+		animations[currentAnimation].Apply(&model);
 		return;
 	}
 
@@ -56,7 +49,7 @@ void Object::handleAnimations()
 
 void Object::Render()
 {
-	if(rotation != glm::vec4(0))
+	if (rotation != glm::vec4(0))
 	{
 		model = glm::rotate(model, glm::radians(rotation.w), glm::vec3(rotation.x, rotation.y, rotation.z));
 	}
@@ -66,14 +59,14 @@ void Object::Render()
 
 void Object::setAnimations(const vector<Animation> animations, bool loopAll)
 {
-		numberOfAnimations = animations.size();
+	numberOfAnimations = animations.size();
 
-		this->animations = vector<Animation>();
+	this->animations = vector<Animation>();
 
-		for (int i = 0; i < animations.size(); i++) {
-			this->animations.push_back(animations[i]);
-		}
-		loopAllAnimations = loopAll;
+	for (int i = 0; i < animations.size(); i++) {
+		this->animations.push_back(animations[i]);
+	}
+	loopAllAnimations = loopAll;
 }
 
 void Object::setAnimation(const Animation animation)

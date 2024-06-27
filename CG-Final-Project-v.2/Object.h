@@ -15,19 +15,19 @@ protected:
 	bool loopAllAnimations = false;
 
 	GLuint vao;
-	vector<Animation> animations;
 
-	virtual void handleAnimations();
 
 public:
+
+	virtual void handleAnimations();
 
 	bool rotating = false;
 
 	glm::mat4 model;
-	glm::mat4 base_model;
 	glm::vec4 rotation;
 	unsigned short numberOfAnimations = 0;
 	unsigned short currentAnimation = 0;
+	vector<Animation> animations;
 
 	//handels the rotating and the animating so the base classes can just implement this render function
 	virtual void Render();
@@ -35,16 +35,16 @@ public:
 	virtual void InitBuffers() = 0;
 
 	virtual	void Move(float x, float y, float z) {
-		base_model = glm::translate(base_model, glm::vec3(x, y, z));
+		model = glm::translate(model, glm::vec3(x, y, z));
 	}
 
 	virtual void Rotate(float x, float y, float z, float angle) {
 		angle = glm::radians(angle);
-		base_model = glm::rotate(base_model, angle, glm::vec3(x, y, z));
+		model = glm::rotate(model, angle, glm::vec3(x, y, z));
 	};
 
 	virtual void Scale(float x, float y, float z) {
-		base_model = glm::scale(base_model, glm::vec3(x, y, z));
+		model = glm::scale(model, glm::vec3(x, y, z));
 	};
 
 	virtual void setAnimations(const vector<Animation> animations, bool loopAll = false);
@@ -53,7 +53,7 @@ public:
 
 	virtual void AddAnimation(Animation animation);
 
-	static void InitShaders(const char* vertex_shader_path,const char* frag_shader_path, GLuint* program_id)
+	static void InitShaders(const char* vertex_shader_path, const char* frag_shader_path, GLuint* program_id)
 	{
 		char* vertexshader = glsl::readFile(vertex_shader_path);
 		GLuint vsh_id = glsl::makeVertexShader(vertexshader);
