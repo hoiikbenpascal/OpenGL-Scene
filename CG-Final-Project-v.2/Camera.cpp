@@ -114,8 +114,8 @@ void Camera::DroneMode() {
 	WalklookingAt = lookingAt;
 	Walkoriantation = oriantation;
 
-	pos = glm::vec3(0, 0, -20.0);
-	lookingAt = glm::vec3(0, 0, 10);
+	pos = glm::vec3(0, 5.1, -20.0);
+	lookingAt = glm::vec3(0, -1, 10);
 	oriantation = glm::vec3(0.0, 1.0, 0.0);
 }
 void Camera::WalkMode() {

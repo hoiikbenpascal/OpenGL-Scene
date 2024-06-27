@@ -71,28 +71,33 @@ static std::vector<Object*> CreateObjects() {
 
 	glm::vec3 amb_diff_spec[3] = { {0,0,0}, {0,0,0}, glm::vec3(1) };
 
+	//Create the objects
 	LoadedObject* teapot = new LoadedObject("Objects/teapot.obj", 100, amb_diff_spec, "Textures/Yellobrk.bmp");
 	LoadedObject* torus = new LoadedObject("Objects/torus.obj", 1024, amb_diff_spec, "Textures/uvtemplate.bmp");
 	PrimitiveMesh* grass = CreateSolidRect(5, 1000, 1000, { 0,255,0 });
+	PrimitiveObject* tree = CreateTree();
 	PrimitiveObject* person = CreatePerson();
 
-	//teapot->setAnimations(animations);
-	teapot->setAnimation(CreateMovementAnimation());
+	//Move the objects
+	person->Move(0, 1.5, 0);
 	teapot->Move(-5, 0, 0);
-	torus->Move(5, 0, 0);
-	grass->Move(0, -5, 0);
+	torus->Move(5, 0.5, 0);
+	grass->Move(0, -2.5f, 0);
 
+	//apply texture to floor
 	vector<glm::vec2> uvs = CreateCubeUvs();
+	grass->ApplyTexture("Textures/grass.bmp", &uvs, 500);
 
-	grass->ApplyTexture("Textures/grass.bmp", &uvs, 100);
-
+	//set animations
+	teapot->setAnimation(CreateMovementAnimation());
 	person->setAnimation(CreateHopAnimation(true));
 
 	std::vector<Object*> objects = std::vector<Object*>{
 		teapot,
 		torus,
 		grass,
-		person
+		person,
+		tree
 	};
 
 	return objects;

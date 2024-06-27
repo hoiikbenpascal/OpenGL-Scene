@@ -227,6 +227,61 @@ static PrimitiveMesh* CreateSphere(float radius, uint16_t stacks, uint16_t slice
 	return pointer;
 }
 
+static PrimitiveMesh* CreateCylinder(float radius, float height, uint16_t num_segments, glm::vec3 color = glm::vec3(1, 1, 1)) {
+	const float PI = 3.14159265358979323846;
+
+	// Calculate the size of the arrays based on the number of segments
+	int verticesSize = (num_segments + 1) * 2 * 3; // Two rings of vertices (top and bottom)
+	int indicesSize = num_segments * 6; // Each segment has two triangles
+
+	// Allocate dynamically sized arrays
+	GLfloat* vertices = (GLfloat*)calloc(verticesSize, sizeof(GLfloat));
+	GLushort* indices = (GLushort*)calloc(indicesSize, sizeof(GLushort));
+	GLfloat* colors = (GLfloat*)calloc(verticesSize, sizeof(GLfloat));
+
+	int vertexIndex = 0;
+	int colorIndex = 0;
+	int indexIndex = 0;
+
+	// Generate the vertices and colors for the cylinder
+	for (int i = 0; i <= num_segments; ++i) {
+		float angle = 2.0f * PI * i / num_segments;
+		float x = radius * std::cos(angle);
+		float z = radius * std::sin(angle);
+
+		// Add top and bottom vertices
+		vertices[vertexIndex++] = x;
+		vertices[vertexIndex++] = height;
+		vertices[vertexIndex++] = z;
+
+		vertices[vertexIndex++] = x;
+		vertices[vertexIndex++] = 0.0f;
+		vertices[vertexIndex++] = z;
+
+		colors[colorIndex++] = color[0];   // R
+		colors[colorIndex++] = color[1];   // G
+		colors[colorIndex++] = color[2];   // B
+		colors[colorIndex++] = color[0];   // R
+		colors[colorIndex++] = color[1];   // G
+		colors[colorIndex++] = color[2];   // B
+	}
+
+	// Generate indices for the triangles
+	for (int i = 0; i < num_segments; ++i) {
+		indices[indexIndex++] = i * 2;
+		indices[indexIndex++] = (i + 1) * 2;
+		indices[indexIndex++] = (i + 1) * 2 + 1;
+
+		indices[indexIndex++] = (i + 1) * 2 + 1;
+		indices[indexIndex++] = i * 2 + 1;
+		indices[indexIndex++] = i * 2;
+	}
+
+	PrimitiveMesh* mesh = new PrimitiveMesh(vertices, verticesSize, colors, verticesSize, indices, indicesSize, Triangle);
+
+	return mesh;
+}
+
 
 static PrimitiveObject* CreatePrimitiveObject() {
 	const int mesh_ammount = 2;
@@ -236,5 +291,16 @@ static PrimitiveObject* CreatePrimitiveObject() {
 	meshes[0].Move(0, 1.5, 0);
 
 	return new PrimitiveObject(meshes, mesh_ammount);
+}
+
+static PrimitiveObject* CreateTree() {
+	const int mesh_ammount = 2;
+	PrimitiveMesh* meshes = new PrimitiveMesh[mesh_ammount]{
+		*CreateCylinder(0.75f, 5, 20, { 0.2,0.13,0 }), *CreateSphere(2.75, 15, 15, { 0,255,0 })
+	};
+	meshes[1].Move(0, 7, 0);
+	PrimitiveObject* obj = new PrimitiveObject(meshes, mesh_ammount);
+	obj->Move(0, 0, 5);
+	return obj;
 }
 
