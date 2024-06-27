@@ -51,7 +51,7 @@ void PrimitiveObject::Move(float x, float y, float z)
 void PrimitiveObject::InitBuffers()
 {
 	for (int mesh = 0; mesh < meshes_ammount; mesh++) {
-		meshes[mesh].InitBuffers();
+		this->meshes[mesh].InitBuffers();
 	}
 
 	for (int mesh = 0; mesh < meshes_ammount; mesh++) {

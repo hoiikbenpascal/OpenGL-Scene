@@ -32,7 +32,6 @@ void main()
     vec3 R = reflect(-L, N);
 
     // Compute the diffuse and specular components for each fragment
-    //vec3 diffuse = max(dot(N, L), 0.0) * texture2D(textSampler, UV).rgb;
     vec3 ambient;
     vec3 diffuse;
     if (apply_texture == 1) {
@@ -47,6 +46,4 @@ void main()
 
     // Write final color to the framebuffer
     fragColor = vec4(ambient + diffuse + specular, 1.0);
-    //gl_FragColor = vec4(mat_ambient + diffuse + specular, 1.0);
-    //gl_FragColor = vec4(mat_ambient + diffuse, 1.0);
 }

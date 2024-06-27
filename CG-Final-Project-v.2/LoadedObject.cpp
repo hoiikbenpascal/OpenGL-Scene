@@ -27,7 +27,7 @@ LoadedObject::LoadedObject(const char object_path[], float power, glm::vec3 amb_
 {
 
 	//check if the shaders have been intitialised, if they haven't been then initialise them
-	if(!shaders_made)
+	if (!shaders_made)
 	{
 		InitShaders(vertex_shader_path, frag_shader_path, &LoadedObject::program_id);
 		shaders_made = true;
@@ -62,7 +62,6 @@ void LoadedObject::InitBuffers()
 	GLuint vbo_vertices;
 	GLuint vbo_normals;
 	GLuint vbo_uvs;
-
 
 	//bind vbo's
 	glGenBuffers(1, &vbo_vertices);
@@ -148,7 +147,7 @@ void LoadedObject::Render()
 
 	glUniformMatrix4fv(uniform_mv, 1, GL_FALSE, glm::value_ptr(view * model));
 
-	if(apply_texture)
+	if (apply_texture)
 	{
 		glUniform1i(uniform_apply_texture, 1);
 		glBindTexture(GL_TEXTURE_2D, texture_id);
