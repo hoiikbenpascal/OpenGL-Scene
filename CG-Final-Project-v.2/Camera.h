@@ -23,10 +23,10 @@ private:
 	void DroneMode();
 	void WalkMode();
 
-public: 
+public:
 
 	Camera() {
-		pos = glm::vec3(2.0, 2.0, 8.0);
+		pos = glm::vec3(1.0, 1.0, 8.0);
 		lookingAt = glm::vec3(0.0, 0.5, 0.0);
 		oriantation = glm::vec3(0.0, 1.0, 0.0);
 	}
