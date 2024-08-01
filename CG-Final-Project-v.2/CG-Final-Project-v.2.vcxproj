@@ -147,8 +147,10 @@
     <ClCompile Include="PrimitiveMesh.cpp" />
     <ClCompile Include="PrimitiveObject.cpp" />
     <ClCompile Include="SceneBuilder.h" />
+    <ClCompile Include="Shader.cpp" />
     <ClCompile Include="texture.cpp" />
     <ClCompile Include="AnimationTimer.cpp" />
+    <ClCompile Include="Texture_Class.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Animation.h" />
@@ -162,8 +164,10 @@
     <ClInclude Include="PrimitiveBuilder.h" />
     <ClInclude Include="PrimitiveMesh.h" />
     <ClInclude Include="PrimitiveObject.h" />
+    <ClInclude Include="Shader.h" />
     <ClInclude Include="texture.h" />
     <ClInclude Include="AnimationTimer.h" />
+    <ClInclude Include="Texture_Class.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="fragmentshader.frag" />

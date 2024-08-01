@@ -29,18 +29,4 @@ public:
 
 	LoadedObject(const char object_path[], float power = 1, glm::vec3 amb_diff_spec[] = nullptr, const char texture_path[] = nullptr);
 	LoadedObject(){};
-
-	static const char* vertex_shader_path;
-	static const char* frag_shader_path;
-
-	static bool shaders_made;
-	static GLuint program_id;
-	static GLuint uniform_proj;
-	static GLuint uniform_material_ambient;
-	static GLuint uniform_material_diffuse;
-	static GLuint uniform_specular;
-	static GLuint uniform_material_power;
-	static GLuint uniform_mv;
-	static GLuint uniform_apply_texture;
-	static GLuint uniform_light_pos;
 };

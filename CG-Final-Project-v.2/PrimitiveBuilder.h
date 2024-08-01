@@ -4,20 +4,6 @@
 #include "PrimitiveMesh.h"
 #include "PrimitiveObject.h"
 
-static vector<glm::vec2> CreateCubeUvs() {
-	// Define UV coordinates for each vertex
-	return {
-	glm::vec2(0.0f, 1.0f),  // Vertex 3
-	glm::vec2(1.0f, 1.0f),  // Vertex 2
-	glm::vec2(1.0f, 0.0f),  // Vertex 1
-	glm::vec2(0.0f, 0.0f),  // Vertex 0
-	glm::vec2(0.0f, 0.0f),  // Vertex 4
-	glm::vec2(1.0f, 0.0f),  // Vertex 5
-	glm::vec2(1.0f, 1.0f),  // Vertex 6
-	glm::vec2(0.0f, 1.0f)   // Vertex 7
-	};
-}
-
 
 static PrimitiveMesh* CreateLineCube()
 {
@@ -59,6 +45,15 @@ static PrimitiveMesh* CreateLineCube()
 static PrimitiveMesh* CreateSolidCube(float sideLength = 2) {
 
 	float halfLength = sideLength * 0.5;
+
+	/*
+	  6-----7
+	 / |   /|
+	2-----3 |
+	|  5--|-4
+	| /   |/ 
+	1-----0
+	*/
 
 	GLfloat vertices[] = {
 		-halfLength, -halfLength, -halfLength,  // Vertex 0

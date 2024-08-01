@@ -6,7 +6,6 @@
 #include "PersonBuilder.h"
 #include "Keyframe.h"
 
-
 static PrimitiveMesh* BuildGrass() {
 	// Define vertices for a quad (patch of grass)
 	GLfloat vertices[] = {
@@ -77,28 +76,39 @@ static std::vector<Object*> CreateObjects() {
 	PrimitiveMesh* grass = CreateSolidRect(5, 1000, 1000, { 0,255,0 });
 	PrimitiveObject* tree = CreateTree();
 	PrimitiveObject* person = CreatePerson();
+	PrimitiveMesh* cube = CreateSolidCube();
+
+	string primitive_shader_path = "Shaders/PrimitiveObjectShaders/";
+	string loaded_object_shader_path = "Shaders/LoadedObjectShaders/";
+	Shader* primitive_shader = new Shader(primitive_shader_path + "vertexshader.vert", primitive_shader_path + "fragmentshader.frag");
+	Shader* loaded_object_shader = new Shader(loaded_object_shader_path + "vertexshader.vert", loaded_object_shader_path + "fragmentshader.frag");
+
+	person->SetShaders(primitive_shader);
+	teapot->SetShaders(loaded_object_shader);
+	torus->SetShaders(loaded_object_shader);
+	grass->SetShaders(primitive_shader);
+	cube->SetShaders(primitive_shader);
+	tree->SetShaders(primitive_shader);
 
 	//Move the objects
 	person->Move(0, 1.5, 0);
-	teapot->Move(-5, 0, 0);
+	teapot->Move(0, 0, 5);
 	torus->Move(5, 0.5, 0);
 	grass->Move(0, -2.5f, 0);
 
-	//apply texture to floor
-	vector<glm::vec2> uvs = CreateCubeUvs();
-	grass->ApplyTexture("Textures/grass.bmp", &uvs, 500);
-
 	//set animations
-	teapot->setAnimation(CreateMovementAnimation());
-	person->setAnimation(CreateHopAnimation(true));
+	//teapot->setAnimation(CreateMovementAnimation());
+	//person->setAnimation(CreateHopAnimation(true));
 
 	std::vector<Object*> objects = std::vector<Object*>{
+		cube,
+		//grass,
 		teapot,
-		torus,
-		grass,
-		person,
+		//torus,
+		//person,
 		tree
 	};
 
 	return objects;
 }
+

@@ -12,6 +12,7 @@ public:
 	void Render() override;
 	void Move(float x, float y, float z) override;
 	void InitBuffers() override;
+	void SetShaders(Shader* shader) override;
 
 	PrimitiveObject(PrimitiveMesh* meshes, const int ammount);
 	PrimitiveObject(vector<PrimitiveMesh> meshes);

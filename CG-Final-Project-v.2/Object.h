@@ -6,6 +6,7 @@
 #include "glsl.h"
 #include "Animation.h"
 #include <iostream>
+#include "Shader.h"
 
 class Object
 {
@@ -13,8 +14,8 @@ class Object
 
 protected:
 	bool loopAllAnimations = false;
-
 	GLuint vao;
+	Shader* shader = nullptr;
 
 
 public:
@@ -34,6 +35,10 @@ public:
 
 	virtual void InitBuffers() = 0;
 
+	virtual void SetShaders(Shader* shader) {
+		this->shader = shader;
+	}
+
 	virtual	void Move(float x, float y, float z) {
 		model = glm::translate(model, glm::vec3(x, y, z));
 	}
@@ -52,17 +57,6 @@ public:
 	virtual void setAnimation(Animation animation);
 
 	virtual void AddAnimation(Animation animation);
-
-	static void InitShaders(const char* vertex_shader_path, const char* frag_shader_path, GLuint* program_id)
-	{
-		char* vertexshader = glsl::readFile(vertex_shader_path);
-		GLuint vsh_id = glsl::makeVertexShader(vertexshader);
-
-		char* fragshader = glsl::readFile(frag_shader_path);
-		GLuint fsh_id = glsl::makeFragmentShader(fragshader);
-
-		(*program_id) = glsl::makeShaderProgram(vsh_id, fsh_id);
-	}
 
 	static Camera* camera;
 };

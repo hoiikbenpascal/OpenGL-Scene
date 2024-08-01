@@ -98,18 +98,6 @@ void InitGlutGlew(int argc, char** argv)
     glewInit();
 }
 
-
-//------------------------------------------------------------
-// void InitShaders()
-// Initializes the fragmentshader and vertexshader
-//------------------------------------------------------------
-
-void InitShaders()
-{
-
-}
-
-
 //------------------------------------------------------------
 // void InitCamera()
 //------------------------------------------------------------
@@ -150,7 +138,6 @@ int main(int argc, char** argv)
 {
     InitCamera();
     InitGlutGlew(argc, argv);
-    InitShaders();
     InitObjects();
     InitBuffers();
     glutKeyboardFunc(keyboardHandler);

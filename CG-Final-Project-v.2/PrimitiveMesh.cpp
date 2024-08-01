@@ -6,15 +6,7 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 
-const char* PrimitiveMesh::vertex_shader_path = "Shaders/PrimitiveObjectShaders/vertexshader.vert";
-const char* PrimitiveMesh::frag_shader_path = "Shaders/PrimitiveObjectShaders/fragmentshader.frag";
 
-GLuint PrimitiveMesh::program_id;
-GLuint PrimitiveMesh::uniform_mvp;
-GLuint PrimitiveMesh::uniform_apply_texture;
-GLuint PrimitiveMesh::uniform_uv_scale;
-
-bool PrimitiveMesh::shaders_made = false;
 
 PrimitiveMesh::PrimitiveMesh(GLfloat* vertices, int vertices_size
 	, GLfloat* colors, int colors_size,
@@ -50,29 +42,7 @@ PrimitiveMesh::PrimitiveMesh(GLfloat* vertices, int vertices_size
 		this->indices[i] = indices[i];
 	}
 
-	if (!shaders_made)
-	{
-		InitShaders(vertex_shader_path, frag_shader_path, &PrimitiveMesh::program_id);
-		uniform_mvp = glGetUniformLocation(program_id, "mvp");
-		shaders_made = true;
-	}
-
-	uniform_apply_texture = glGetUniformLocation(
-		program_id, "apply_texture");
-	apply_texture = false;
 }
-
-void PrimitiveMesh::ApplyTexture(const char* texture_path, const vector<glm::vec2>* uvs, int uv_scale) {
-	texture_id = loadBMP(texture_path);
-	this->uvs = *uvs;
-	apply_texture = true;
-	uniform_apply_texture = glGetUniformLocation(
-		program_id, "apply_texture");
-	uniform_uv_scale = glGetUniformLocation(
-		program_id, "uv_scale");
-	this->uv_scale = uv_scale;
-}
-
 
 void PrimitiveMesh::Render()
 {
@@ -80,25 +50,17 @@ void PrimitiveMesh::Render()
 
 	glm::mat4 mvp = camera->GetProjection() * camera->GetView() * model;
 
-	// Attach to program_id
-	glUseProgram(program_id);
 
-	glUniformMatrix4fv(uniform_mvp, 1, GL_FALSE, glm::value_ptr(mvp));
+	glUniformMatrix4fv(shader->GetUniform("mvp"), 1, GL_FALSE, glm::value_ptr(mvp));
 
-	if (this->apply_texture)
-	{
-		glUniform1i(uniform_apply_texture, 1);
-		glUniform1i(uniform_uv_scale, uv_scale);
-		glBindTexture(GL_TEXTURE_2D, texture_id);
-
-		// Set texture wrapping mode for S (U) and T (V) coordinates
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+	if (this->texture != nullptr) {
+		glUniform1i(shader->GetUniform("apply_texture"), 1);
 	}
 	else
 	{
-		glUniform1i(uniform_apply_texture, 0);
+		glUniform1i(shader->GetUniform("apply_texture"), 0);
 	}
+
 
 	// Send vao
 	glBindVertexArray(vao);
@@ -141,9 +103,9 @@ void PrimitiveMesh::InitBuffers()
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 
 	// Get vertex attributes
-	position_id = glGetAttribLocation(program_id, "position");
-	color_id = glGetAttribLocation(program_id, "color");
-	GLuint uv_id = glGetAttribLocation(program_id, "uv");
+	position_id = glGetAttribLocation(shader->programId, "position");
+	color_id = glGetAttribLocation(shader->programId, "color");
+	GLuint uv_id = glGetAttribLocation(shader->programId, "uv");
 
 	// Allocate memory for vao
 	glGenVertexArrays(1, &vao);

@@ -3,6 +3,17 @@
 
 Camera* Object::camera;
 
+void Object::Render()
+{
+	shader->Activate();
+	if (rotation != glm::vec4(0))
+	{
+		model = glm::rotate(model, glm::radians(rotation.w), glm::vec3(rotation.x, rotation.y, rotation.z));
+	}
+
+	handleAnimations();
+}
+
 void Object::handleAnimations()
 {
 	//if there are no animations to handle
@@ -45,16 +56,6 @@ void Object::handleAnimations()
 	}
 
 	AllAnimationsFinished = true;
-}
-
-void Object::Render()
-{
-	if (rotation != glm::vec4(0))
-	{
-		model = glm::rotate(model, glm::radians(rotation.w), glm::vec3(rotation.x, rotation.y, rotation.z));
-	}
-
-	handleAnimations();
 }
 
 void Object::setAnimations(const vector<Animation> animations, bool loopAll)

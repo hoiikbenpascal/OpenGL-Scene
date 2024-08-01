@@ -1,6 +1,7 @@
 #pragma once
 #include "Object.h"
 #include <glm/gtc/matrix_transform.hpp>
+#include "Texture_Class.h"
 
 enum PrimitveTypes {
 	Line = GL_LINES,
@@ -21,15 +22,8 @@ class PrimitiveMesh : public Object
 
 	PrimitveTypes type;
 
-	GLuint texture_id;
+	Texture* texture = nullptr;
 
-	static const char* vertex_shader_path;
-	static const char* frag_shader_path;
-	static GLuint uniform_mvp;
-	static GLuint program_id;
-	static GLuint uniform_apply_texture;
-	static GLuint uniform_uv_scale;
-	static bool shaders_made;
 
 public:
 
@@ -46,11 +40,11 @@ public:
 		delete[] colors;
 	}
 
-	void ApplyTexture(const char* texture_path, const vector<glm::vec2>* uvs, int uv_scale = 1);
-
 	void ApplyModel(const glm::mat4* model) {
 		this->model = *model * this->model;
 	}
+
+	void BindCubeMap(vector<std::string> textures);
 
 	void Render() override;
 	void InitBuffers() override;

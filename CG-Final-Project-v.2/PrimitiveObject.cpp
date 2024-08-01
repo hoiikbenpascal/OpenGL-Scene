@@ -60,6 +60,13 @@ void PrimitiveObject::InitBuffers()
 	//model = glm::mat4(1.0f);
 }
 
+void PrimitiveObject::SetShaders(Shader* shader)
+{
+	for (int mesh = 0; mesh < meshes_ammount; mesh++) {
+		this->meshes[mesh].SetShaders(shader);
+	}
+}
+
 PrimitiveObject::~PrimitiveObject()
 {
 	delete[] meshes;

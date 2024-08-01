@@ -7,31 +7,9 @@
 #include <glm/gtc/type_ptr.hpp>
 
 
-const char* LoadedObject::vertex_shader_path = "Shaders/LoadedObjectShaders/vertexshader.vert";
-const char* LoadedObject::frag_shader_path = "Shaders/LoadedObjectShaders/fragmentshader.frag";
-
-bool LoadedObject::shaders_made = false;
-GLuint LoadedObject::program_id;
-GLuint LoadedObject::uniform_material_ambient;
-GLuint LoadedObject::uniform_material_diffuse;
-GLuint LoadedObject::uniform_material_power;
-GLuint LoadedObject::uniform_specular;
-GLuint LoadedObject::uniform_mv;
-GLuint LoadedObject::uniform_proj;
-GLuint LoadedObject::uniform_light_pos;
-GLuint LoadedObject::uniform_apply_texture;
-
-
 LoadedObject::LoadedObject(const char object_path[], float power, glm::vec3 amb_diff_spec[],
 	const char texture_path[])
 {
-
-	//check if the shaders have been intitialised, if they haven't been then initialise them
-	if (!shaders_made)
-	{
-		InitShaders(vertex_shader_path, frag_shader_path, &LoadedObject::program_id);
-		shaders_made = true;
-	}
 
 	//load the object
 	bool res = loadOBJ(object_path, vertices, uvs, normals);
@@ -87,9 +65,9 @@ void LoadedObject::InitBuffers()
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 
 	// Get vertex attributes
-	position_id = glGetAttribLocation(program_id, "position");
-	GLuint normal_id = glGetAttribLocation(program_id, "normal");
-	GLuint uv_id = glGetAttribLocation(program_id, "uv");
+	position_id = glGetAttribLocation(shader->programId, "position");
+	GLuint normal_id = glGetAttribLocation(shader->programId, "normal");
+	GLuint uv_id = glGetAttribLocation(shader->programId, "uv");
 
 	// Allocate memory for vao
 	glGenVertexArrays(1, &this->vao);
@@ -115,25 +93,6 @@ void LoadedObject::InitBuffers()
 
 	//stop bind to vao
 	glBindVertexArray(0);
-
-	glUseProgram(program_id);
-
-	//fill object's uniforms
-	uniform_mv = glGetUniformLocation(program_id, "mv");
-	uniform_proj = glGetUniformLocation(program_id, "projection");
-
-	uniform_material_ambient = glGetUniformLocation(program_id,
-		"mat_ambient");
-	uniform_material_diffuse = glGetUniformLocation(program_id,
-		"mat_diffuse");
-	uniform_specular = glGetUniformLocation(
-		program_id, "mat_specular");
-	uniform_material_power = glGetUniformLocation(
-		program_id, "mat_power");
-	uniform_apply_texture = glGetUniformLocation(
-		program_id, "apply_texture");
-	uniform_light_pos = glGetUniformLocation(program_id, "light_pos");
-
 }
 
 void LoadedObject::Render()
@@ -143,27 +102,27 @@ void LoadedObject::Render()
 	glm::mat4 view = camera->GetView();
 
 	// Attach to program_id
-	glUseProgram(program_id);
+	glUseProgram(shader->programId);
 
-	glUniformMatrix4fv(uniform_mv, 1, GL_FALSE, glm::value_ptr(view * model));
+	glUniformMatrix4fv(shader->GetUniform("mv"), 1, GL_FALSE, glm::value_ptr(view * model));
 
 	if (apply_texture)
 	{
-		glUniform1i(uniform_apply_texture, 1);
+		glUniform1i(shader->GetUniform("apply_texture"), 1);
 		glBindTexture(GL_TEXTURE_2D, texture_id);
 	}
 
 	// Fill uniform vars
-	glUniformMatrix4fv(uniform_proj, 1, GL_FALSE, glm::value_ptr(camera->GetProjection()));
-	glUniform3fv(uniform_material_ambient, 1, glm::value_ptr(amb_diff_spec[0]));
-	glUniform3fv(uniform_material_diffuse, 1, glm::value_ptr(amb_diff_spec[1]));
-	glUniform3fv(uniform_specular, 1, glm::value_ptr(amb_diff_spec[2]));
+	glUniformMatrix4fv(shader->GetUniform("projection"), 1, GL_FALSE, glm::value_ptr(camera->GetProjection()));
+	glUniform3fv(shader->GetUniform("mat_ambient"), 1, glm::value_ptr(amb_diff_spec[0]));
+	glUniform3fv(shader->GetUniform("mat_diffuse"), 1, glm::value_ptr(amb_diff_spec[1]));
+	glUniform3fv(shader->GetUniform("mat_specular"), 1, glm::value_ptr(amb_diff_spec[2]));
 	//glUniform3fv(uniform_light_pos, 1, glm::value_ptr(camera->GetLightPos()));
-	glUniform1f(uniform_material_power, power);
-	glUniform1f(uniform_apply_texture, apply_texture);
+	glUniform1f(shader->GetUniform("mat_power"), power);
+	glUniform1f(shader->GetUniform("apply_texture"), apply_texture);
 
 	// Send mv
-	glUniformMatrix4fv(uniform_mv, 1, GL_FALSE, glm::value_ptr(view * model));
+	glUniformMatrix4fv(shader->GetUniform("mv"), 1, GL_FALSE, glm::value_ptr(view * model));
 
 	// Send vao
 	glBindVertexArray(vao);
