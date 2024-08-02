@@ -1,24 +1,20 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-
 #include <GL/glew.h>
 
-
-GLuint loadBMP(const char * imagepath) {
-
+unsigned char* loadBMP(const char* imagepath, unsigned int& width, unsigned int& height, bool flip_y) {
     printf("Reading image %s\n", imagepath);
 
     // Data read from the header of the BMP file
     unsigned char header[54];
     unsigned int dataPos;
     unsigned int imageSize;
-    unsigned int width, height;
     // Actual RGB data
-    unsigned char * data;
+    unsigned char* data;
 
     // Open the file
-    FILE * file = fopen(imagepath, "rb");
+    FILE* file = fopen(imagepath, "rb");
     if (!file) { printf("%s could not be opened. Are you in the right directory ? Don't forget to read the FAQ !\n", imagepath); getchar(); return 0; }
 
     // Read the header, i.e. the 54 first bytes
@@ -44,7 +40,7 @@ GLuint loadBMP(const char * imagepath) {
     height = *(int*)&(header[0x16]);
 
     // Some BMP files are misformatted, guess missing information
-    if (imageSize == 0)    imageSize = width*height * 3; // 3 : one byte for each Red, Green and Blue component
+    if (imageSize == 0)    imageSize = width * height * 3; // 3 : one byte for each Red, Green and Blue component
     if (dataPos == 0)      dataPos = 54; // The BMP header is done that way
 
     // Create a buffer
@@ -55,6 +51,33 @@ GLuint loadBMP(const char * imagepath) {
 
     // Everything is in memory now, the file wan be closed
     fclose(file);
+
+    if (flip_y) {
+        // swap y-axis
+        unsigned char* tmpBuffer = new unsigned char[width * 3];
+        int size = width * 3;
+        for (int i = 0;i < height / 2;i++) {
+            // copy row i to tmp
+            memcpy_s(tmpBuffer, size, data + width * 3 * i, size);
+            // copy row h-i-1 to i
+            memcpy_s(data + width * 3 * i, size, data + width * 3 * (height - i - 1), size);
+            // copy tmp to row h-i-1
+            memcpy_s(data + width * 3 * (height - i - 1), size, tmpBuffer, size);
+        }
+        delete[] tmpBuffer;
+    }
+
+    return data;
+}
+
+GLuint loadBMP(const char * imagepath) {
+
+    printf("Reading image %s\n", imagepath);
+
+    // Data read from the header of the BMP file
+    unsigned int width, height;
+    // Actual RGB data
+    unsigned char * data = loadBMP(imagepath, width, height, false);
 
     // Create one OpenGL texture
     GLuint textureID;

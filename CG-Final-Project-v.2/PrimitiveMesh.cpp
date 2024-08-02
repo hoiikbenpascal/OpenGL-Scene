@@ -48,11 +48,6 @@ void PrimitiveMesh::Render()
 {
 	Object::Render();
 
-	glm::mat4 mvp = camera->GetProjection() * camera->GetView() * model;
-
-
-	glUniformMatrix4fv(shader->GetUniform("mvp"), 1, GL_FALSE, glm::value_ptr(mvp));
-
 	if (this->texture != nullptr) {
 		glUniform1i(shader->GetUniform("apply_texture"), 1);
 	}
@@ -129,8 +124,9 @@ void PrimitiveMesh::InitBuffers()
 	glEnableVertexAttribArray(color_id);
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 
-	if (this->apply_texture) {
+	if (this->texture != nullptr) {
 		//bind uvs to vao
+		this->texture->Bind();
 		glBindBuffer(GL_ARRAY_BUFFER, vbo_uvs);
 		glVertexAttribPointer(uv_id, 2, GL_FLOAT, GL_FALSE, 0, 0);
 		glEnableVertexAttribArray(uv_id);

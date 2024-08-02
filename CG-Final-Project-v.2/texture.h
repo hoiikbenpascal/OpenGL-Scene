@@ -1,6 +1,12 @@
 #ifndef TEXTURE_HPP
 #define TEXTURE_HPP
 
+
+unsigned char* loadJPG(const char* imagepath, unsigned int& width, unsigned int& height);
+
+// Load a .BMP file using custom loader that also returns the width, height and data of the image instead of initializing it in a texture
+unsigned char* loadBMP(const char* imagepath, unsigned int& width, unsigned int& height, bool flip_y = false);
+
 // Load a .BMP file using our custom loader
 GLuint loadBMP(const char * imagepath);
 

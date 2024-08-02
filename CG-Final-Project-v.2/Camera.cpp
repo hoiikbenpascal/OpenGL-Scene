@@ -80,6 +80,8 @@ void Camera::Move(unsigned char key) {
 		toggle();
 		break;
 	}
+	
+	View = glm::lookAt(pos, lookingAt, oriantation);
 }
 
 void Camera::SetProjection(int WIDTH, int HEIGHT)
@@ -91,12 +93,22 @@ void Camera::SetProjection(int WIDTH, int HEIGHT)
 
 glm::mat4 Camera::GetView()
 {
-	return glm::lookAt(pos, lookingAt, oriantation);
+	return View;
+}
+
+glm::mat4* Camera::GetViewPointer()
+{
+	return &View;
 }
 
 glm::mat4 Camera::GetProjection()
 {
 	return Projection;
+}
+
+glm::mat4* Camera::GetProjectionPointer()
+{
+	return &Projection;
 }
 
 void Camera::SetLightPos(glm::vec3 new_pos)

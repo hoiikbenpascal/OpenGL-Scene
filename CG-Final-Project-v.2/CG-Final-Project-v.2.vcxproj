@@ -148,6 +148,7 @@
     <ClCompile Include="PrimitiveObject.cpp" />
     <ClCompile Include="SceneBuilder.h" />
     <ClCompile Include="Shader.cpp" />
+    <ClCompile Include="Skybox.cpp" />
     <ClCompile Include="texture.cpp" />
     <ClCompile Include="AnimationTimer.cpp" />
     <ClCompile Include="Texture_Class.cpp" />
@@ -165,6 +166,7 @@
     <ClInclude Include="PrimitiveMesh.h" />
     <ClInclude Include="PrimitiveObject.h" />
     <ClInclude Include="Shader.h" />
+    <ClInclude Include="Skybox.h" />
     <ClInclude Include="texture.h" />
     <ClInclude Include="AnimationTimer.h" />
     <ClInclude Include="Texture_Class.h" />

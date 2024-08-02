@@ -5,6 +5,7 @@
 #include "LoadedObject.h"
 #include "PersonBuilder.h"
 #include "Keyframe.h"
+#include "Skybox.h"
 
 static PrimitiveMesh* BuildGrass() {
 	// Define vertices for a quad (patch of grass)
@@ -76,19 +77,26 @@ static std::vector<Object*> CreateObjects() {
 	PrimitiveMesh* grass = CreateSolidRect(5, 1000, 1000, { 0,255,0 });
 	PrimitiveObject* tree = CreateTree();
 	PrimitiveObject* person = CreatePerson();
-	PrimitiveMesh* cube = CreateSolidCube();
+	Skybox* skybox = (Skybox*)CreateSolidCube();
 
 	string primitive_shader_path = "Shaders/PrimitiveObjectShaders/";
 	string loaded_object_shader_path = "Shaders/LoadedObjectShaders/";
+	string cube_map_shader_path = "Shaders/CubeMapShaders/";
+	string skybox_shader_path = "Shaders/Skyboxshaders/";
+
 	Shader* primitive_shader = new Shader(primitive_shader_path + "vertexshader.vert", primitive_shader_path + "fragmentshader.frag");
 	Shader* loaded_object_shader = new Shader(loaded_object_shader_path + "vertexshader.vert", loaded_object_shader_path + "fragmentshader.frag");
+	Shader* cube_map_shader = new Shader(cube_map_shader_path + "vertexshader.vert", cube_map_shader_path + "fragmentshader.frag");
+	Shader* skybox_shader = new Shader(skybox_shader_path + "vertexshader.vert", skybox_shader_path + "fragmentshader.frag");
+
 
 	person->SetShaders(primitive_shader);
 	teapot->SetShaders(loaded_object_shader);
 	torus->SetShaders(loaded_object_shader);
 	grass->SetShaders(primitive_shader);
-	cube->SetShaders(primitive_shader);
 	tree->SetShaders(primitive_shader);
+
+	skybox->SetShaders(cube_map_shader);
 
 	//Move the objects
 	person->Move(0, 1.5, 0);
@@ -96,12 +104,26 @@ static std::vector<Object*> CreateObjects() {
 	torus->Move(5, 0.5, 0);
 	grass->Move(0, -2.5f, 0);
 
+	vector<string> cube_map_file_locations =
+	{
+	"Textures/Skybox/right.bmp",
+	"Textures/Skybox/left.bmp",
+	"Textures/Skybox/top.bmp",
+	"Textures/Skybox/bottom.bmp",
+	"Textures/Skybox/front.bmp",
+	"Textures/Skybox/back.bmp"
+	};
+
+	skybox->texture = new Texture(GL_TEXTURE_CUBE_MAP);
+	skybox->texture->LoadCubeMap(cube_map_file_locations);
+	
+
 	//set animations
 	//teapot->setAnimation(CreateMovementAnimation());
 	//person->setAnimation(CreateHopAnimation(true));
 
 	std::vector<Object*> objects = std::vector<Object*>{
-		cube,
+		skybox,
 		//grass,
 		teapot,
 		//torus,

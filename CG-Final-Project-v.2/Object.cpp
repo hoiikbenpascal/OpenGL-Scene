@@ -1,11 +1,15 @@
 #include "Object.h"
 #include <glm/detail/type_mat4x4.hpp>
+#include <glm/gtc/type_ptr.hpp>
 
 Camera* Object::camera;
 
 void Object::Render()
 {
+
 	shader->Activate();
+	shader->AddUniformsIfAvailable(&model, camera->GetViewPointer(), camera->GetProjectionPointer());
+
 	if (rotation != glm::vec4(0))
 	{
 		model = glm::rotate(model, glm::radians(rotation.w), glm::vec3(rotation.x, rotation.y, rotation.z));

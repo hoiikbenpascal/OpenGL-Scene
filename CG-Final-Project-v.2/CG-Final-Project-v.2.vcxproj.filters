@@ -84,6 +84,9 @@
     <ClCompile Include="Shader.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Skybox.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="glsl.h">
@@ -130,6 +133,9 @@
     </ClInclude>
     <ClInclude Include="Shader.h">
       <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Skybox.h">
+      <Filter>Header Files\Objects</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

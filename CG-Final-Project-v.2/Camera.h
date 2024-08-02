@@ -16,6 +16,7 @@ private:
 	glm::vec3 Walkoriantation;
 
 	glm::mat4 Projection;
+	glm::mat4 View;
 
 	//true is walk false is drone
 	bool Mode = true;
@@ -37,8 +38,11 @@ public:
 	}
 
 	glm::mat4 GetView();
+	glm::mat4* GetViewPointer();
+
 	void SetProjection(int WIDTH, int HEIGHT);
 	glm::mat4 GetProjection();
+	glm::mat4* GetProjectionPointer();
 
 	void SetLightPos(glm::vec3 new_pos);
 	glm::vec3 GetLightPos();

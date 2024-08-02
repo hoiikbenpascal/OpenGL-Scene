@@ -18,14 +18,14 @@ class PrimitiveMesh : public Object
 
 	vector<glm::vec2> uvs;
 	int uv_scale = 1;
-	bool apply_texture = false;
 
 	PrimitveTypes type;
 
-	Texture* texture = nullptr;
 
 
 public:
+
+	Texture* texture = nullptr;
 
 	PrimitiveMesh(GLfloat* vertices, int vertices_size,
 		GLfloat* colors, int colors_size,
@@ -43,8 +43,6 @@ public:
 	void ApplyModel(const glm::mat4* model) {
 		this->model = *model * this->model;
 	}
-
-	void BindCubeMap(vector<std::string> textures);
 
 	void Render() override;
 	void InitBuffers() override;

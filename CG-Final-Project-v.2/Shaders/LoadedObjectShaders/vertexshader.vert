@@ -1,8 +1,10 @@
 #version 430 core
 
 // Uniform matrices
-uniform mat4 mv;
+uniform mat4 model;
+uniform mat4 view;
 uniform mat4 projection;
+
 uniform vec3 light_pos;
 
 // Per-vertex inputs
@@ -20,6 +22,7 @@ out vec2 UV;
 
 void main()
 {
+    mat4 mv = view * model;
     // Calculate view-space coordinate
     vec4 P = mv * vec4(position, 1.0);
 
