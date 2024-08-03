@@ -3,7 +3,7 @@
 #include <cmath>
 #include "PrimitiveMesh.h"
 #include "PrimitiveObject.h"
-
+#include "Skybox.h"
 
 static PrimitiveMesh* CreateLineCube()
 {

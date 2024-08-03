@@ -21,8 +21,8 @@ PrimitiveMesh::PrimitiveMesh(GLfloat* vertices, int vertices_size
 
 	//allocate memory for object
 	this->vertices = (GLfloat*)calloc(vertices_size, sizeof(GLfloat));
-	this->colors = (GLfloat*)calloc(colors_size, sizeof(GLfloat));
 	this->indices = (GLushort*)calloc(indices_size, sizeof(GLushort));
+	this->colors = (GLfloat*)calloc(colors_size, sizeof(GLfloat));
 
 	if (this->vertices == NULL || this->colors == NULL || this->indices == NULL) {
 		throw std::bad_alloc();
@@ -33,13 +33,13 @@ PrimitiveMesh::PrimitiveMesh(GLfloat* vertices, int vertices_size
 	{
 		this->vertices[i] = vertices[i];
 	}
-	for (int i = 0; i < colors_size; i++)
-	{
-		this->colors[i] = colors[i];
-	}
 	for (int i = 0; i < indices_size; i++)
 	{
 		this->indices[i] = indices[i];
+	}
+	for (int i = 0; i < colors_size; i++)
+	{
+		this->colors[i] = colors[i];
 	}
 
 }
@@ -126,7 +126,6 @@ void PrimitiveMesh::InitBuffers()
 
 	if (this->texture != nullptr) {
 		//bind uvs to vao
-		this->texture->Bind();
 		glBindBuffer(GL_ARRAY_BUFFER, vbo_uvs);
 		glVertexAttribPointer(uv_id, 2, GL_FLOAT, GL_FALSE, 0, 0);
 		glEnableVertexAttribArray(uv_id);

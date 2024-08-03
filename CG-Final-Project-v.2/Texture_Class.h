@@ -3,8 +3,8 @@
 #include <vector>
 class Texture
 {
-	
-
+	static int textureAmmount;
+	int tex_num;
 public:
 	GLuint id;
 	GLenum textureType;
@@ -15,12 +15,12 @@ public:
 		
 	}
 
+	void Activate();
+
 	void LoadCubeMap(vector<string> texture_paths);
 
 	void Load(char* texture_path);
-
-	void Bind() {
-		glBindTexture(textureType, id);
-	}
 };
+
+
 

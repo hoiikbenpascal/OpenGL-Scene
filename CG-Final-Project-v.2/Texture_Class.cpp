@@ -1,8 +1,19 @@
 #include "Texture_Class.h"
 #include "texture.h"
 
+int Texture::textureAmmount = 0;
+
+void Texture::Activate()
+{
+	glActiveTexture(GL_TEXTURE0 + tex_num);
+	glBindTexture(GL_TEXTURE_CUBE_MAP, id);
+}
+
 void Texture::LoadCubeMap(vector<string> texture_paths)
 {
+
+	tex_num = textureAmmount;
+	textureAmmount++;
 
 	// Creates the cubemap texture object
 	glGenTextures(1, &id);
@@ -41,6 +52,8 @@ void Texture::LoadCubeMap(vector<string> texture_paths)
 		glEnable(GL_TEXTURE_CUBE_MAP_SEAMLESS);
 	}
 }
+
+
 
 void Texture::Load(char* texture_path)
 {

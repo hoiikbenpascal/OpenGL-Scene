@@ -33,11 +33,13 @@ public:
 		pos = glm::vec3(1.0, 1.0, 8.0);
 		lookingAt = glm::vec3(0.0, 0.5, 0.0);
 		oriantation = glm::vec3(0.0, 1.0, 0.0);
+		UpdateView();
 	}
 	Camera(glm::vec3 EyePosition, glm::vec3 center, glm::vec3 oriantation = glm::vec3(0.0, 1.0, 0.0)) {
 		pos = EyePosition;
 		Camera::lookingAt = center;
 		Camera::oriantation = oriantation;
+		UpdateView();
 	}
 
 	glm::mat4 GetView();

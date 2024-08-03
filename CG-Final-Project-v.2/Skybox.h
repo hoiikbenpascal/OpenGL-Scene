@@ -3,11 +3,10 @@
 
 class Skybox : public PrimitiveMesh
 {
-	GLfloat* vertices;
-	int vertices_size;
 
-	GLushort* indices;
-	int indices_size;
+public:
+
+	Skybox();
 
 	void Render() override;
 };

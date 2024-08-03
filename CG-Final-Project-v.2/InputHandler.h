@@ -15,8 +15,7 @@ public:
 		this->camera = camera;
 	}
 
-	int start_y = 0;
-	int start_x = 0;
+	void Reset();
 
 	InputHandler() {}
 

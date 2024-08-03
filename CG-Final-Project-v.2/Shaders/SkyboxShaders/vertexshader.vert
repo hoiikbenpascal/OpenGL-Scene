@@ -1,9 +1,11 @@
 #version 430 core
-layout (location = 0) in vec3 position;
 
 // Uniform matrices
 uniform mat4 view;
 uniform mat4 projection;
+
+// Per-vertex inputs
+in vec3 position;
 
 out vec3 texCoords;
 

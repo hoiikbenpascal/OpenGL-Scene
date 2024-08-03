@@ -10,6 +10,8 @@ enum PrimitveTypes {
 
 class PrimitiveMesh : public Object
 {
+protected:
+
 	int vertices_size, colors_size, indices_size;
 
 	GLfloat* vertices;
@@ -32,7 +34,7 @@ public:
 		GLushort* indices, int indices_size,
 		PrimitveTypes type = Line);
 
-	PrimitiveMesh();
+	PrimitiveMesh() {};
 
 	~PrimitiveMesh() {
 		delete[] vertices;

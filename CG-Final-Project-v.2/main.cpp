@@ -98,17 +98,23 @@ void keyboardHandler(unsigned char key, int a, int b)
     Handler.HandleKeyboard(key);
 }
 
-void HandleMouse(int x, int y) {
-    Handler.start_x = x;
-    Handler.start_y = y;
-    
+void MouseHandler(int x, int y) {
     Handler.HandleMouse(x, y);
+}
+
+void HandleClick(int button, int state, int x, int y) {
+    if (button == GLUT_LEFT_BUTTON) {
+        if (state == GLUT_UP) {
+            Handler.Reset();
+        }
+    }
 }
 
 void InitControls() {
     Handler = InputHandler(&MainCamera);
 
-    glutMotionFunc(HandleMouse);
+    glutMouseFunc(HandleClick);
+    glutMotionFunc(MouseHandler);
     //glutPassiveMotionFunc(HandleMouse);
 
     glutKeyboardFunc(keyboardHandler);

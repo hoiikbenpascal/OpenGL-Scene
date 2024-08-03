@@ -4,15 +4,18 @@
 #include "glsl.h";
 #include <GL/freeglut_std.h>
 
+void InputHandler::Reset() {
+	prev_x = 0;
+	prev_y = 0;
+}
+
 void InputHandler::HandleMouse(int x, int y)
 {
 	if (prev_x == 0) {
-		start_x = x;
 		prev_x = x;
 	}
 
 	if (prev_y == 0) {
-		start_y = y;
 		prev_y = y;
 	}
 
