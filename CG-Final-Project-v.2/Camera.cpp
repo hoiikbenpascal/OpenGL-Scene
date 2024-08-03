@@ -8,82 +8,6 @@ const float NearPlane = 0.1f;
 const float FarPlane = 1000;
 const float FoV = 45;
 
-void Camera::Move(unsigned char key) {
-	switch (key) {
-		//escape
-	case 27:
-		glutExit();
-		break;
-		//move the camera
-	case 'w':
-		Forward();
-		break;
-	case 'W':
-		Forward();
-		break;
-	case 's':
-		Backward();
-		break;
-	case 'S':
-		Backward();
-		break;
-	case 'a':
-		Left();
-		break;
-	case 'A':
-		Left();
-		break;
-	case 'd':
-		Right();
-		break;
-	case 'D':
-		Right();
-		break;
-	case ' ':
-		MoveUp();
-		break;
-	case 'x':
-		MoveDown();
-		break;
-	case 'X':
-		MoveDown();
-		break;
-
-		//roatate the camera
-	case 'i':
-		LookUp();
-		break;
-	case 'I':
-		LookUp();
-		break;
-	case 'j':
-		LookLeft();
-		break;
-	case 'J':
-		LookLeft();
-		break;
-	case 'k':
-		LookDown();
-		break;
-	case 'K':
-		LookDown();
-		break;
-	case 'l':
-		LookRight();
-		break;
-	case 'L':
-		LookRight();
-		break;
-
-		//switch the cameras
-	case 'v':
-		toggle();
-		break;
-	}
-	
-	View = glm::lookAt(pos, lookingAt, oriantation);
-}
-
 void Camera::SetProjection(int WIDTH, int HEIGHT)
 {
 	Projection = glm::perspective(glm::radians(FoV),
@@ -211,6 +135,14 @@ void Camera::MoveDown(float movement) {
 	lookingAt -= oriantation * movement;
 }
 
+void Camera::lookAround(float x, float y)
+{
+	glm::vec3 dir = glm::normalize(pos - lookingAt);
+	glm::vec3 up = glm::vec3(0, 1, 0);
+	lookingAt += (glm::normalize(glm::cross(up, dir)) * x);
+	lookingAt[1] += y;
+}
+
 void Camera::LookLeft(float movement) {
 	glm::vec3 dir = glm::normalize(pos - lookingAt);
 	glm::vec3 up = glm::vec3(0, 1, 0);
@@ -220,7 +152,6 @@ void Camera::LookRight(float movement) {
 	glm::vec3 dir = glm::normalize(pos - lookingAt);
 	glm::vec3 up = glm::vec3(0, 1, 0);
 	lookingAt += glm::normalize(glm::cross(up, dir));
-
 }
 void Camera::LookUp(float movement) {
 	lookingAt[1] += movement;

@@ -2,11 +2,10 @@
 
 void Skybox::Render()
 {
-	glDepthFunc(GL_LEQUAL);
-	glActiveTexture(GL_TEXTURE0);
-	texture->Bind();
+	glDepthMask(GL_FALSE);
 
 	Object::Render();
+	
 
 	GLuint view_uniform = shader->GetUniform("view");
 	
@@ -16,9 +15,11 @@ void Skybox::Render()
 	// Send vao
 	glBindVertexArray(vao);
 
+	texture->Bind();
+
 	glDrawElements(GL_TRIANGLES, indices_size, GL_UNSIGNED_SHORT, 0);
 
 	glBindVertexArray(0);
 
-	glDepthFunc(GL_LESS);
+	glDepthMask(GL_TRUE);
 }

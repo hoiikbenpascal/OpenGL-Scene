@@ -1,5 +1,6 @@
 #pragma once
 #include <glm/glm.hpp>;
+#include <glm/gtc/matrix_transform.hpp>
 
 class Camera
 {
@@ -20,6 +21,8 @@ private:
 
 	//true is walk false is drone
 	bool Mode = true;
+
+	float mouseSpeed = 0.005f;
 
 	void DroneMode();
 	void WalkMode();
@@ -51,6 +54,10 @@ public:
 
 	void Move(unsigned char key);
 
+	void UpdateView() {
+		View = glm::lookAt(pos, lookingAt, oriantation);
+	}
+
 	//camera movement
 	void Forward(float movement = 1);
 	void Backward(float movement = 1);
@@ -58,6 +65,8 @@ public:
 	void Right(float movement = 1);
 	void MoveUp(float movement = 1);
 	void MoveDown(float movement = 1);
+
+	void lookAround(float x, float y);
 
 	//camera rotation
 	void LookLeft(float movement = 1);

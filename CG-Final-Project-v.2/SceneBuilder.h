@@ -106,12 +106,12 @@ static std::vector<Object*> CreateObjects() {
 
 	vector<string> cube_map_file_locations =
 	{
-	"Textures/Skybox/right.bmp",
-	"Textures/Skybox/left.bmp",
-	"Textures/Skybox/top.bmp",
-	"Textures/Skybox/bottom.bmp",
-	"Textures/Skybox/front.bmp",
-	"Textures/Skybox/back.bmp"
+	"Textures/TestCubeMap/right.bmp",
+	"Textures/TestCubeMap/left.bmp",
+	"Textures/TestCubeMap/top.bmp",
+	"Textures/TestCubeMap/bottom.bmp",
+	"Textures/TestCubeMap/front.bmp",
+	"Textures/TestCubeMap/back.bmp"
 	};
 
 	skybox->texture = new Texture(GL_TEXTURE_CUBE_MAP);

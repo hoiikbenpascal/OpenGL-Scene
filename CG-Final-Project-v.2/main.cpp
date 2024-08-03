@@ -12,6 +12,7 @@
 #include "Camera.h"
 #include "Object.h"
 #include "SceneBuilder.h"
+#include "InputHandler.h"
 
 using namespace std;
 
@@ -30,19 +31,9 @@ using namespace std;
 
 
 static Camera MainCamera;
+static InputHandler Handler;
 
 vector<Object*> objects;
-
-
-//--------------------------------------------------------------------------------
-// Keyboard handling
-//--------------------------------------------------------------------------------
-
-void keyboardHandler(unsigned char key, int a, int b)
-{
-    MainCamera.Move(key);
-}
-
 
 //--------------------------------------------------------------------------------
 // Rendering
@@ -89,7 +80,6 @@ void InitGlutGlew(int argc, char** argv)
     glutInitWindowSize(WIDTH, HEIGHT);
     glutCreateWindow("Hello OpenGL");
     glutDisplayFunc(Render);
-    glutKeyboardFunc(keyboardHandler);
     glutTimerFunc(DELTA_TIME, Render, 0);
 
     glEnable(GL_DEPTH_TEST);
@@ -98,10 +88,36 @@ void InitGlutGlew(int argc, char** argv)
     glewInit();
 }
 
-//------------------------------------------------------------
-// void InitCamera()
-//------------------------------------------------------------
 
+//------------------------------------------------------------
+// void InitControls
+// Initializes the controls
+//------------------------------------------------------------
+void keyboardHandler(unsigned char key, int a, int b)
+{
+    Handler.HandleKeyboard(key);
+}
+
+void HandleMouse(int x, int y) {
+    Handler.start_x = x;
+    Handler.start_y = y;
+    
+    Handler.HandleMouse(x, y);
+}
+
+void InitControls() {
+    Handler = InputHandler(&MainCamera);
+
+    glutMotionFunc(HandleMouse);
+    //glutPassiveMotionFunc(HandleMouse);
+
+    glutKeyboardFunc(keyboardHandler);
+}
+
+//------------------------------------------------------------
+// void InitCamera
+// Initializes the camera
+//------------------------------------------------------------
 void InitCamera()
 {
     MainCamera = Camera(glm::vec3(0, 3, -10.0),
@@ -136,11 +152,11 @@ void InitObjects() {
 
 int main(int argc, char** argv)
 {
-    InitCamera();
     InitGlutGlew(argc, argv);
+    InitCamera();
+    InitControls();
     InitObjects();
     InitBuffers();
-    glutKeyboardFunc(keyboardHandler);
     
 
     // Hide console window
