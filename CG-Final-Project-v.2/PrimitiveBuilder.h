@@ -584,7 +584,7 @@ static std::vector<Object*> CreateTreeRow(int ammount, float x_offset, float z_o
 	leaves->Load("Textures/leaves.bmp");
 	leaves->repeat = true;
 
-	for (int i = 0; i < ammount; i++) {
+	for (int i = -ammount / 2; i < ammount / 2; i++) {
 		Object* tree = CreateTree(bark, 2, leaves, 2);
 		tree->SetShaders(shader);
 		tree->Move(x_offset * i, 0, z_offset * i);

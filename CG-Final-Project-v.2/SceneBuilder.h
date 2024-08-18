@@ -61,8 +61,8 @@ static std::vector<Object*> CreateBaseObjects() {
 	floor->SetShaders(primitive_shader);
 	road->SetShaders(primitive_shader);
 	std::vector<Object*> objects = vector<Object*>{skybox, floor, road};
-	std::vector<Object*> trees_right = CreateTreeRow(100, 0, 7.5, primitive_shader, {7.5,0,-500});
-	std::vector<Object*> trees_left = CreateTreeRow(100, 0, 7.5, primitive_shader, {-7.5,0,-500});
+	std::vector<Object*> trees_right = CreateTreeRow(67, 0, 7.5, primitive_shader, {7.5,0,0});
+	std::vector<Object*> trees_left = CreateTreeRow(67, 0, 7.5, primitive_shader, {-7.5,0,0});
 
 	for (int i = 0; i < trees_left.size(); i++) {
 		objects.push_back(trees_left[i]);
