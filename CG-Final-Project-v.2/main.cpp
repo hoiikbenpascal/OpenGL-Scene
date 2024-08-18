@@ -132,7 +132,7 @@ void InitCamera()
 
     MainCamera.SetProjection(WIDTH, HEIGHT);
 
-    MainCamera.SetLightPos(glm::vec3(0, 3, -10));
+    MainCamera.SetLightPos(glm::vec3(0, 50, -1000));
 
     Object::camera = &MainCamera;
 }
@@ -154,6 +154,7 @@ void InitBuffers()
 void InitObjects() {
 
     objects = CreateObjects();
+    glm::vec3 light_pos = MainCamera.GetLightPos();
 }
 
 int main(int argc, char** argv)

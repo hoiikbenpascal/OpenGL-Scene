@@ -8,7 +8,14 @@ void Object::Render()
 {
 
 	shader->Activate();
-	shader->AddUniformsIfAvailable(&model, camera->GetViewPointer(), camera->GetProjectionPointer());
+	shader->SetStandardUniformsIfAvailable(&model, camera->GetViewPointer(), camera->GetProjectionPointer());
+	shader->SetMatUniformsIfAvailable(camera->GetLightPos(), & mat);
+
+	GLuint apply_texture_uniform = shader->GetUniform("apply_texture");
+
+	if (apply_texture_uniform != -1) {
+		glUniform1i(apply_texture_uniform, 0);
+	}
 
 	if (rotation != glm::vec4(0))
 	{
@@ -16,6 +23,8 @@ void Object::Render()
 	}
 
 	handleAnimations();
+
+	glBindVertexArray(vao);
 }
 
 void Object::handleAnimations()

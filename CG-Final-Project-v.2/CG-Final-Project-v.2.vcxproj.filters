@@ -19,9 +19,6 @@
     <Filter Include="Header Files\Objects">
       <UniqueIdentifier>{1f7f0ef2-7e10-4376-a174-68e400bb972c}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source Files\Builders">
-      <UniqueIdentifier>{14ff7a4d-44aa-44f0-9c9f-40f128a2d9f3}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Header Files\Builders">
       <UniqueIdentifier>{d0aeb17b-bcdd-4688-b3af-a9f78d522766}</UniqueIdentifier>
     </Filter>
@@ -81,14 +78,14 @@
     <ClCompile Include="texture.cpp">
       <Filter>Source Files\Texture</Filter>
     </ClCompile>
-    <ClCompile Include="Shader.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="InputHandler.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Skybox.cpp">
       <Filter>Source Files\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Shader.cpp">
+      <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -134,13 +131,16 @@
     <ClInclude Include="texture.h">
       <Filter>Header Files\Texture</Filter>
     </ClInclude>
-    <ClInclude Include="Shader.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="Skybox.h">
       <Filter>Header Files\Objects</Filter>
     </ClInclude>
     <ClInclude Include="InputHandler.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Material.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Shader.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

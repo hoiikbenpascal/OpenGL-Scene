@@ -6,7 +6,7 @@ class Skybox : public PrimitiveMesh
 
 public:
 
-	Skybox();
+	Skybox(std::vector<string> paths);
 
 	void Render() override;
 };

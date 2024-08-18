@@ -46,6 +46,10 @@ void PrimitiveObject::Render()
 void PrimitiveObject::Move(float x, float y, float z)
 {
 	Object::Move(x, y, z);
+
+	for (int mesh = 0; mesh < meshes_ammount; mesh++) {
+		meshes[mesh].Move(x, y, z);
+	}
 }
 
 void PrimitiveObject::InitBuffers()

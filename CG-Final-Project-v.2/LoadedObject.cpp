@@ -7,15 +7,20 @@
 #include <glm/gtc/type_ptr.hpp>
 
 
-LoadedObject::LoadedObject(const char object_path[], float power, glm::vec3 amb_diff_spec[],
+LoadedObject::LoadedObject(const char object_path[], const Material* mat,
 	const char texture_path[])
 {
 
 	//load the object
 	bool res = loadOBJ(object_path, vertices, uvs, normals);
-	if (texture_path != nullptr && res)
-	{
-		texture_id = loadBMP(texture_path);
+	
+	if (mat != nullptr) {
+		this->mat = *mat;
+	}
+
+	if (texture_path != nullptr) {
+		this->texture = Texture();
+		this->texture.Load(texture_path);
 		apply_texture = true;
 	}
 
@@ -36,44 +41,45 @@ LoadedObject::LoadedObject(const char object_path[], float power, glm::vec3 amb_
 
 void LoadedObject::InitBuffers()
 {
-	GLuint position_id;
 	GLuint vbo_vertices;
 	GLuint vbo_normals;
 	GLuint vbo_uvs;
 
+	// Allocate memory for vao
+	glGenVertexArrays(1, &this->vao);
+
 	//bind vbo's
 	glGenBuffers(1, &vbo_vertices);
 	glBindBuffer(GL_ARRAY_BUFFER, vbo_vertices);
-	glBufferData(GL_ARRAY_BUFFER,
+	glBufferData(GL_ARRAY_BUFFER, 
 		vertices.size() * sizeof(glm::vec3), vertices.data(),
-		GL_STATIC_DRAW);
+		GL_DYNAMIC_DRAW);
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 
-	// vbo for normals
 	glGenBuffers(1, &vbo_normals);
 	glBindBuffer(GL_ARRAY_BUFFER, vbo_normals);
 	glBufferData(GL_ARRAY_BUFFER,
-		normals.size() * sizeof(glm::vec3),
-		normals.data(), GL_STATIC_DRAW);
+		normals.size() * sizeof(glm::vec3), normals.data(),
+		GL_DYNAMIC_DRAW);
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 
 	// vbo for uvs
 	glGenBuffers(1, &vbo_uvs);
 	glBindBuffer(GL_ARRAY_BUFFER, vbo_uvs);
 	glBufferData(GL_ARRAY_BUFFER, uvs.size() * sizeof(glm::vec2),
-		uvs.data(), GL_STATIC_DRAW);
+		uvs.data(), GL_DYNAMIC_DRAW);
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 
 	// Get vertex attributes
-	position_id = glGetAttribLocation(shader->programId, "position");
+	GLuint position_id = glGetAttribLocation(shader->programId, "position");
 	GLuint normal_id = glGetAttribLocation(shader->programId, "normal");
 	GLuint uv_id = glGetAttribLocation(shader->programId, "uv");
 
-	// Allocate memory for vao
-	glGenVertexArrays(1, &this->vao);
-
 	// Bind to vao
 	glBindVertexArray(this->vao);
+
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
+	glEnableVertexAttribArray(0);
 
 	// Bind vertices to vao
 	glBindBuffer(GL_ARRAY_BUFFER, vbo_vertices);
@@ -81,11 +87,13 @@ void LoadedObject::InitBuffers()
 	glEnableVertexAttribArray(position_id);
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 
+	//bind normals
 	glBindBuffer(GL_ARRAY_BUFFER, vbo_normals);
 	glVertexAttribPointer(normal_id, 3, GL_FLOAT, GL_FALSE, 0, 0);
 	glEnableVertexAttribArray(normal_id);
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 
+	//bind uvs
 	glBindBuffer(GL_ARRAY_BUFFER, vbo_uvs);
 	glVertexAttribPointer(uv_id, 2, GL_FLOAT, GL_FALSE, 0, 0);
 	glEnableVertexAttribArray(uv_id);
@@ -99,33 +107,17 @@ void LoadedObject::Render()
 {
 	Object::Render();
 
-	glm::mat4 view = camera->GetView();
-
-	// Attach to program_id
-	glUseProgram(shader->programId);
-
-	glUniformMatrix4fv(shader->GetUniform("mv"), 1, GL_FALSE, glm::value_ptr(view * model));
-
-	if (apply_texture)
-	{
+	if (apply_texture) {
+		texture.Activate();
 		glUniform1i(shader->GetUniform("apply_texture"), 1);
-		glBindTexture(GL_TEXTURE_2D, texture_id);
+	}
+	else
+	{
+		glUniform1i(shader->GetUniform("apply_texture"), 0);
 	}
 
-	// Fill uniform vars
-	glUniformMatrix4fv(shader->GetUniform("projection"), 1, GL_FALSE, glm::value_ptr(camera->GetProjection()));
-	glUniform3fv(shader->GetUniform("mat_ambient"), 1, glm::value_ptr(amb_diff_spec[0]));
-	glUniform3fv(shader->GetUniform("mat_diffuse"), 1, glm::value_ptr(amb_diff_spec[1]));
-	glUniform3fv(shader->GetUniform("mat_specular"), 1, glm::value_ptr(amb_diff_spec[2]));
-	//glUniform3fv(uniform_light_pos, 1, glm::value_ptr(camera->GetLightPos()));
-	glUniform1f(shader->GetUniform("mat_power"), power);
-	glUniform1f(shader->GetUniform("apply_texture"), apply_texture);
-
-	// Send mv
-	glUniformMatrix4fv(shader->GetUniform("mv"), 1, GL_FALSE, glm::value_ptr(view * model));
-
 	// Send vao
-	glBindVertexArray(vao);
+
 	glDrawArrays(GL_TRIANGLES, 0, vertices.size());
 	glBindVertexArray(0);
 

@@ -8,18 +8,25 @@ class Texture
 public:
 	GLuint id;
 	GLenum textureType;
+	bool repeat = false;
 
 	Texture(GLenum type) {
 		id = GLuint();
 		textureType = type;
-		
+	}
+
+	Texture() {}
+
+	~Texture()
+	{
+		textureAmmount--;
 	}
 
 	void Activate();
 
 	void LoadCubeMap(vector<string> texture_paths);
 
-	void Load(char* texture_path);
+	void Load(const char* texture_path);
 };
 
 

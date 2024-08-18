@@ -5,15 +5,19 @@ int Texture::textureAmmount = 0;
 
 void Texture::Activate()
 {
-	glActiveTexture(GL_TEXTURE0 + tex_num);
-	glBindTexture(GL_TEXTURE_CUBE_MAP, id);
+	if (repeat) {
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+	}
+	glBindTexture(GL_TEXTURE_2D, id);
 }
 
 void Texture::LoadCubeMap(vector<string> texture_paths)
 {
-
 	tex_num = textureAmmount;
 	textureAmmount++;
+
+	textureType = GL_TEXTURE_CUBE_MAP;
 
 	// Creates the cubemap texture object
 	glGenTextures(1, &id);
@@ -55,8 +59,12 @@ void Texture::LoadCubeMap(vector<string> texture_paths)
 
 
 
-void Texture::Load(char* texture_path)
+void Texture::Load(const char* texture_path)
 {
+
+	tex_num = textureAmmount;
+	textureAmmount++;
+
 	this->id = loadBMP(texture_path);
 	this->textureType = GL_TEXTURE_2D;
 }

@@ -23,7 +23,19 @@ static Animation CreateArmJumpAnimation() {
 	return Animation(frames, true);
 }
 
-static PrimitiveObject* CreatePerson() {
+static Animation CreateHopAnimation(bool loop = false) {
+
+	vector<Keyframe> frames = {
+		Keyframe({0,-0.5f / 0.20f, 0}, 0.20f),
+		Keyframe({ 0,5.5f / 0.80f ,0 }, 0.80f),
+		Keyframe({ 0,-5,0 }, 1)
+	};
+
+	Animation animation(frames, loop);
+	return animation;
+}
+
+static PrimitiveObject* CreatePerson(Shader* shader) {
 
 #pragma region Create constants
 
@@ -93,6 +105,7 @@ static PrimitiveObject* CreatePerson() {
 #pragma endregion
 
 	PrimitiveObject* person = new PrimitiveObject(meshes, mesh_ammount);
-
+	person->SetShaders(shader);
+	person->setAnimation(CreateHopAnimation(true));
 	return person;
 }

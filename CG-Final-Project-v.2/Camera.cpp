@@ -5,7 +5,7 @@
 #include "glsl.h";
 
 const float NearPlane = 0.1f;
-const float FarPlane = 1000;
+const float FarPlane = 100000;
 const float FoV = 45;
 
 void Camera::SetProjection(int WIDTH, int HEIGHT)
@@ -43,6 +43,11 @@ void Camera::SetLightPos(glm::vec3 new_pos)
 glm::vec3 Camera::GetLightPos()
 {
 	return light_pos;
+}
+
+glm::vec3 Camera::GetPos()
+{
+	return pos;
 }
 
 void Camera::DroneMode() {

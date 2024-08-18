@@ -2,7 +2,6 @@
 
 uniform sampler2D textSampler;
 uniform int apply_texture;
-uniform int uv_scale;
 
 // Inputs from vertexshader
 in vec3 vColor;
@@ -15,7 +14,7 @@ void main()
 {
     if(apply_texture == 1){
         //fragColor = vec4(vColor, 1.0);
-        fragColor = texture(textSampler, UV * uv_scale);
+        fragColor = texture2D(textSampler, UV);
     }
     else{
     fragColor = vec4(vColor, 1.0);

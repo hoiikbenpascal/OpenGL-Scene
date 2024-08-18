@@ -161,6 +161,7 @@
     <ClInclude Include="InputHandler.h" />
     <ClInclude Include="Keyframe.h" />
     <ClInclude Include="LoadedObject.h" />
+    <ClInclude Include="Material.h" />
     <ClInclude Include="Object.h" />
     <ClInclude Include="objloader.h" />
     <ClInclude Include="PersonBuilder.h" />

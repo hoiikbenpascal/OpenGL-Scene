@@ -1,7 +1,7 @@
 #include "Skybox.h"
 #include <glm/gtc/type_ptr.hpp>
 
-Skybox::Skybox()
+Skybox::Skybox(std::vector<string> paths)
 {
 	float halfLength = 0.5;
 
@@ -51,6 +51,19 @@ Skybox::Skybox()
 	}
 
 	type = PrimitveTypes::Triangle;
+
+	vector<string> cube_map_file_locations =
+	{
+	"Textures/Skybox/right.bmp",
+	"Textures/Skybox/left.bmp",
+	"Textures/Skybox/top.bmp",
+	"Textures/Skybox/bottom.bmp",
+	"Textures/Skybox/front.bmp",
+	"Textures/Skybox/back.bmp"
+	};
+
+	texture = new Texture(GL_TEXTURE_CUBE_MAP);
+	texture->LoadCubeMap(cube_map_file_locations);
 }
 
 void Skybox::Render()

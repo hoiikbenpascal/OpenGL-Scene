@@ -9,8 +9,7 @@
 
 
 PrimitiveMesh::PrimitiveMesh(GLfloat* vertices, int vertices_size
-	, GLfloat* colors, int colors_size,
-	GLushort* indices, int indices_size,
+	,GLushort* indices, int indices_size, GLfloat* colors, int colors_size,
 	PrimitveTypes type)
 {
 	this->type = type;
@@ -44,11 +43,41 @@ PrimitiveMesh::PrimitiveMesh(GLfloat* vertices, int vertices_size
 
 }
 
+PrimitiveMesh::PrimitiveMesh(GLfloat* vertices, int vertices_size, GLushort* indices, int indices_size, PrimitveTypes type)
+{
+	this->vertices_size = vertices_size;
+	this->indices_size = indices_size;
+
+	//allocate memory for object
+	this->vertices = (GLfloat*)calloc(vertices_size, sizeof(GLfloat));
+	this->indices = (GLushort*)calloc(indices_size, sizeof(GLushort));
+
+	if (this->vertices == NULL || this->indices == NULL) {
+		throw std::bad_alloc();
+	}
+
+	this->type = type;
+
+	//copy object into allocated memory
+	for (int i = 0; i < vertices_size; i++)
+	{
+		this->vertices[i] = vertices[i];
+	}
+	for (int i = 0; i < indices_size; i++)
+	{
+		this->indices[i] = indices[i];
+	}
+}
+
 void PrimitiveMesh::Render()
 {
+	// Send vao
+	glBindVertexArray(vao);
+
 	Object::Render();
 
 	if (this->texture != nullptr) {
+		texture->Activate();
 		glUniform1i(shader->GetUniform("apply_texture"), 1);
 	}
 	else
@@ -57,8 +86,6 @@ void PrimitiveMesh::Render()
 	}
 
 
-	// Send vao
-	glBindVertexArray(vao);
 
 	glDrawElements(type, indices_size, GL_UNSIGNED_SHORT, 0);
 
@@ -84,11 +111,13 @@ void PrimitiveMesh::InitBuffers()
 	glBufferData(GL_ARRAY_BUFFER, sizeof(vertices) * vertices_size, vertices, GL_STATIC_DRAW);
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 
-	// vbo for colors
-	glGenBuffers(1, &vbo_colors);
-	glBindBuffer(GL_ARRAY_BUFFER, vbo_colors);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(colors) * colors_size, colors, GL_STATIC_DRAW);
-	glBindBuffer(GL_ARRAY_BUFFER, 0);
+	if (colors_size != 0) {
+		// vbo for colors
+		glGenBuffers(1, &vbo_colors);
+		glBindBuffer(GL_ARRAY_BUFFER, vbo_colors);
+		glBufferData(GL_ARRAY_BUFFER, sizeof(colors) * colors_size, colors, GL_STATIC_DRAW);
+		glBindBuffer(GL_ARRAY_BUFFER, 0);
+	}
 
 	// vbo for uvs
 	glGenBuffers(1, &vbo_uvs);
@@ -108,7 +137,7 @@ void PrimitiveMesh::InitBuffers()
 	// Bind to vao
 	glBindVertexArray(vao);
 
-	// Set up vertex attribute pointers for positions
+	//// Set up vertex attribute pointers for positions
 	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(GLfloat), (GLvoid*)0);
 	glEnableVertexAttribArray(0);
 
@@ -118,11 +147,13 @@ void PrimitiveMesh::InitBuffers()
 	glEnableVertexAttribArray(position_id);
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 
+	if (this->colors_size != 0) {
 	// Bind colors to vao
-	glBindBuffer(GL_ARRAY_BUFFER, vbo_colors);
-	glVertexAttribPointer(color_id, 3, GL_FLOAT, GL_FALSE, 0, 0);
-	glEnableVertexAttribArray(color_id);
-	glBindBuffer(GL_ARRAY_BUFFER, 0);
+		glBindBuffer(GL_ARRAY_BUFFER, vbo_colors);
+		glVertexAttribPointer(color_id, 3, GL_FLOAT, GL_FALSE, 0, 0);
+		glEnableVertexAttribArray(color_id);
+		glBindBuffer(GL_ARRAY_BUFFER, 0);
+	}
 
 	if (this->texture != nullptr) {
 		//bind uvs to vao

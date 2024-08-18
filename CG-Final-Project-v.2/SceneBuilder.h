@@ -7,6 +7,10 @@
 #include "Keyframe.h"
 #include "Skybox.h"
 
+static Shader* primitive_shader;
+static Shader* phong_shaders;
+static Shader* skybox_shader;
+
 static Animation CreateMovementAnimation() {
 
 	float time = 1;
@@ -18,10 +22,14 @@ static Animation CreateMovementAnimation() {
 	//could have made all this in the vector constructor but this made it more readable
 	Keyframe move_back_and_rotate = Keyframe(move_back, rotation, time);
 	Keyframe move_up_and_rotate = Keyframe(move_up, rotation, time);
+	Keyframe rotateAroundPoint = Keyframe({ 0,1,0,180 }, 2, { 0,0,-1 });
+	Keyframe rotateAroundPointFlip = Keyframe({ 0,1,0,-180 }, 2, { 0,0,1 });
 
 	vector<Keyframe> frames = {
 		move_back_and_rotate,
 		move_up_and_rotate,
+		rotateAroundPoint,
+		rotateAroundPointFlip,
 		move_up_and_rotate.flip(),
 		move_back_and_rotate.flip()
 	};
@@ -29,80 +37,58 @@ static Animation CreateMovementAnimation() {
 	return animation;
 }
 
-static Animation CreateHopAnimation(bool loop = false) {
-
-	vector<Keyframe> frames = {
-		Keyframe({0,-0.5f / 0.20f, 0}, 0.20f),
-		Keyframe({ 0,5.5f / 0.80f ,0 }, 0.80f),
-		Keyframe({ 0,-5,0 }, 1)
-	};
-
-	Animation animation(frames, loop);
-	return animation;
+static void InitShaders() {
+	primitive_shader = new Shader("Shaders/PrimitiveObjectShaders/");
+	phong_shaders = new Shader("Shaders/UVPhongShaders/");
+	skybox_shader = new Shader("Shaders/Skyboxshaders/");
 }
 
-static std::vector<Object*> CreateObjects() {
-
-	glm::vec3 amb_diff_spec[3] = { {0,0,0}, {0,0,0}, glm::vec3(1) };
-
-	//Create the objects
-	LoadedObject* huis = new LoadedObject("Objects/huis.obj", 1, amb_diff_spec);
-	//LoadedObject* teapot = new LoadedObject("Objects/teapot.obj", 100, amb_diff_spec, "Textures/Yellobrk.bmp");
-	//LoadedObject* torus = new LoadedObject("Objects/torus.obj", 1024, amb_diff_spec, "Textures/uvtemplate.bmp");
-	PrimitiveObject* tree = CreateTree();
-	PrimitiveObject* person = CreatePerson();
-	Skybox* skybox = new Skybox(); //(Skybox*)CreateSolidCube();
-
-	string primitive_shader_path = "Shaders/PrimitiveObjectShaders/";
-	string loaded_object_shader_path = "Shaders/LoadedObjectShaders/";
-	string cube_map_shader_path = "Shaders/CubeMapShaders/";
-	string skybox_shader_path = "Shaders/Skyboxshaders/";
-
-	//Shader* primitive_shader = new Shader(primitive_shader_path + "vertexshader.vert", primitive_shader_path + "fragmentshader.frag");
-	Shader* loaded_object_shader = new Shader(loaded_object_shader_path + "vertexshader.vert", loaded_object_shader_path + "fragmentshader.frag");
-	Shader* cube_map_shader = new Shader(cube_map_shader_path + "vertexshader.vert", cube_map_shader_path + "fragmentshader.frag");
-	Shader* skybox_shader = new Shader(skybox_shader_path + "vertexshader.vert", skybox_shader_path + "fragmentshader.frag");
-
-	huis->SetShaders(loaded_object_shader);
-
-	//person->SetShaders(primitive_shader);
-	//teapot->SetShaders(loaded_object_shader);
-	//torus->SetShaders(loaded_object_shader);
-	//tree->SetShaders(primitive_shader);
-
-	skybox->SetShaders(skybox_shader);
-
-	////Move the objects
-	//person->Move(0, 1.5, 0);
-	//teapot->Move(0, 0, 5);
-	//torus->Move(5, 0.5, 0);
-
-	vector<string> cube_map_file_locations =
-	{
+static std::vector<Object*> CreateBaseObjects() {
+	Skybox* skybox = new Skybox({
 	"Textures/Skybox/right.bmp",
 	"Textures/Skybox/left.bmp",
 	"Textures/Skybox/top.bmp",
 	"Textures/Skybox/bottom.bmp",
 	"Textures/Skybox/front.bmp",
-	"Textures/Skybox/back.bmp"
-	};
+	"Textures/Skybox/back.bmp" });
+	PrimitiveMesh* floor = CreatePlane(1000, 1000, "Textures/grass-top.bmp", 100, 100);
+	PrimitiveMesh* road = CreatePlane(10, 1000, "Textures/road_bmp.bmp", 1, 100);
+	road->Move(0, 0.1, 0);
 
-	skybox->texture = new Texture(GL_TEXTURE_CUBE_MAP);
-	skybox->texture->LoadCubeMap(cube_map_file_locations);
-	
+	skybox->SetShaders(skybox_shader);
+	floor->SetShaders(primitive_shader);
+	road->SetShaders(primitive_shader);
+	std::vector<Object*> objects = vector<Object*>{skybox, floor, road};
+	std::vector<Object*> trees_right = CreateTreeRow(100, 0, 7.5, primitive_shader, {7.5,0,-500});
+	std::vector<Object*> trees_left = CreateTreeRow(100, 0, 7.5, primitive_shader, {-7.5,0,-500});
 
-	//set animations
-	//teapot->setAnimation(CreateMovementAnimation());
-	//person->setAnimation(CreateHopAnimation(true));
+	for (int i = 0; i < trees_left.size(); i++) {
+		objects.push_back(trees_left[i]);
+		objects.push_back(trees_right[i]);
+	}
 
-	std::vector<Object*> objects = std::vector<Object*>{
-		skybox,
-		huis
-		//teapot,
-		//torus,
-		//person,
-		//tree
-	};
+	//objects.push_back(CreateExtrudedTriangle(5, 10, primitive_shader));
+	objects.push_back(CreatePerson(primitive_shader));
+	objects[objects.size() - 1]->Move(0,1,0);
+	return objects;
+}
+
+static std::vector<Object*> CreateObjects() {
+	InitShaders();
+
+	Material* shiny_mat = new Material(glm::vec3(0.4), glm::vec3(1), glm::vec3(1.2), 10);
+
+	//create the objects
+	LoadedObject* teapot = new LoadedObject("Objects/teapot.obj", shiny_mat, "Textures/Yellobrk.bmp");
+	teapot->setAnimation(Animation(Keyframe(glm::vec4(0, 1, 0, 90), 1), true));
+	teapot->SetShaders(phong_shaders);
+	teapot->Move(3, 0.2, 0);
+	teapot->setAnimation(CreateMovementAnimation());
+
+	std::vector<Object*> objects = CreateBaseObjects();
+	objects.push_back(teapot);
+
+	delete shiny_mat;
 
 	return objects;
 }

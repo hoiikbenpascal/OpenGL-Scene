@@ -12,34 +12,45 @@ class PrimitiveMesh : public Object
 {
 protected:
 
-	int vertices_size, colors_size, indices_size;
+	int vertices_size, colors_size = 0, indices_size;
 
 	GLfloat* vertices;
 	GLfloat* colors;
 	GLushort* indices;
 
-	vector<glm::vec2> uvs;
-	int uv_scale = 1;
 
 	PrimitveTypes type;
 
-
-
 public:
+
+	vector<glm::vec2> uvs;
 
 	Texture* texture = nullptr;
 
 	PrimitiveMesh(GLfloat* vertices, int vertices_size,
-		GLfloat* colors, int colors_size,
 		GLushort* indices, int indices_size,
+		GLfloat* colors, int colors_size,
 		PrimitveTypes type = Line);
+
+	PrimitiveMesh(GLfloat* vertices, int vertices_size, GLushort* indices, int indices_size, PrimitveTypes type);
 
 	PrimitiveMesh() {};
 
 	~PrimitiveMesh() {
-		delete[] vertices;
-		delete[] indices;
-		delete[] colors;
+		if (vertices != nullptr) {
+			delete[] vertices;
+		}
+
+		if (indices != nullptr) {
+			delete[] indices;
+		}
+
+		if (colors != nullptr) {
+			delete[] colors;
+		}
+		if (texture != nullptr) {
+			delete texture;
+		}
 	}
 
 	void ApplyModel(const glm::mat4* model) {

@@ -51,6 +51,7 @@ public:
 
 	void SetLightPos(glm::vec3 new_pos);
 	glm::vec3 GetLightPos();
+	glm::vec3 GetPos();
 
 	void toggle();
 

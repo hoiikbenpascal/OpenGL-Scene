@@ -1,6 +1,10 @@
 #pragma once
+#include <GL/glew.h>
+#include <string>
 #include "glsl.h"
-#include <glm/detail/type_mat.hpp>
+#include <glm/detail/type_vec3.hpp>
+#include <glm/detail/type_mat4x4.hpp>
+#include "Material.h"
 
 class Shader
 {
@@ -8,24 +12,15 @@ public:
 
 	GLuint programId;
 
-	Shader(std::string vertex_path, std::string fragment_path) {
-
-		char* vertexshader = glsl::readFile(vertex_path.c_str());
-		char* fragshader = glsl::readFile(fragment_path.c_str());
-
-
-		GLuint vsh_id = glsl::makeVertexShader(vertexshader);
-		GLuint fsh_id = glsl::makeFragmentShader(fragshader);
-		programId = glsl::makeShaderProgram(vsh_id, fsh_id);
-	}
+	Shader(std::string vertex_path, std::string fragment_path);
+	Shader(std::string folder_path);
 
 	GLuint GetUniform(const char* uniform_name);
 
-	void AddUniformsIfAvailable(const glm::mat4* model, const glm::mat4* view, const glm::mat4* projection);
+	void SetStandardUniformsIfAvailable(const glm::mat4* model, const glm::mat4* view, const glm::mat4* projection);
+	void SetMatUniformsIfAvailable(const glm::vec3 light_pos, const Material* mat);
 
-	void Activate() {
-		glUseProgram(programId);
-	}
+	void Activate();
 
 	void Delete() {
 		glDeleteProgram(programId);
