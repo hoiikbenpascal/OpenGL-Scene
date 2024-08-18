@@ -70,6 +70,10 @@ void Skybox::Render()
 {
 	glDepthFunc(GL_LEQUAL);
 
+	if (texture != nullptr) {
+		texture->Activate();
+	}
+
 	Object::Render();
 
 	GLuint view_uniform = shader->GetUniform("view");

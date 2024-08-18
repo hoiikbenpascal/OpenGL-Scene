@@ -37,20 +37,6 @@ public:
 	PrimitiveMesh() {};
 
 	~PrimitiveMesh() {
-		if (vertices != nullptr) {
-			delete[] vertices;
-		}
-
-		if (indices != nullptr) {
-			delete[] indices;
-		}
-
-		if (colors != nullptr) {
-			delete[] colors;
-		}
-		if (texture != nullptr) {
-			delete texture;
-		}
 	}
 
 	void ApplyModel(const glm::mat4* model) {

@@ -10,6 +10,7 @@
 static Shader* primitive_shader;
 static Shader* phong_shaders;
 static Shader* skybox_shader;
+static Shader* cubemap_shader;
 
 static Animation CreateMovementAnimation() {
 
@@ -41,6 +42,7 @@ static void InitShaders() {
 	primitive_shader = new Shader("Shaders/PrimitiveObjectShaders/");
 	phong_shaders = new Shader("Shaders/UVPhongShaders/");
 	skybox_shader = new Shader("Shaders/Skyboxshaders/");
+	cubemap_shader = new Shader("Shaders/CubeMapShaders/");
 }
 
 static std::vector<Object*> CreateBaseObjects() {
@@ -67,9 +69,9 @@ static std::vector<Object*> CreateBaseObjects() {
 		objects.push_back(trees_right[i]);
 	}
 
-	//objects.push_back(CreateExtrudedTriangle(5, 10, primitive_shader));
-	objects.push_back(CreatePerson(primitive_shader));
-	objects[objects.size() - 1]->Move(0,1,0);
+	objects.push_back(CreateHouse(primitive_shader, cubemap_shader, {10,0.2, 10}));
+	//objects.push_back(CreatePerson(primitive_shader));
+	//objects[objects.size() - 1]->Move(0,1,0);
 	return objects;
 }
 
@@ -86,7 +88,7 @@ static std::vector<Object*> CreateObjects() {
 	teapot->setAnimation(CreateMovementAnimation());
 
 	std::vector<Object*> objects = CreateBaseObjects();
-	objects.push_back(teapot);
+	//objects.push_back(teapot);
 
 	delete shiny_mat;
 

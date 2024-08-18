@@ -80,4 +80,9 @@ void PrimitiveObject::MoveOneMesh(int index, float x, float y, float z) {
 	meshes[index].Move(x, y, z);
 }
 
+void PrimitiveObject::RotateOneMesh(int mesh, glm::vec3 angles, float angle, glm::vec3 pivot)
+{
+	meshes[mesh].Rotate(angles, angle, pivot);
+}
+
 

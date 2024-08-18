@@ -440,7 +440,7 @@ static PrimitiveMesh* CreateCylinder(float radius, float height, uint16_t num_se
 	return mesh;
 }
 
-static PrimitiveMesh* CreateTriangle(float width, float height) {
+static PrimitiveMesh* CreateTriangle(float width, float height, Texture* texture = nullptr) {
 
 	/*
 	   2 
@@ -459,42 +459,97 @@ static PrimitiveMesh* CreateTriangle(float width, float height) {
 		0,1,2
 	};
 
-	return new PrimitiveMesh(vertices, 9, indices, 3, PrimitveTypes::Triangle);
+	PrimitiveMesh* mesh = new PrimitiveMesh(vertices, 9, indices, 3, PrimitveTypes::Triangle);
+
+	if (texture != nullptr) {
+		vector<glm::vec2> uvs = {
+			{0,1}, {1,1}, {0.5,0}
+		};
+
+		mesh->texture = texture;
+		mesh->uvs = uvs;
+	}
+	return mesh;
 }
 
-static PrimitiveObject* CreateExtrudedTriangle(float width, float depth, Shader* shader, const char front_and_back_texture[] = nullptr, const char other_faces[] = nullptr) {
+static vector<PrimitiveMesh*> CreateExtrudedTriangle(float width, float height, float depth, Shader* shader, const char front_and_back_texture[] = nullptr, const char other_faces[] = nullptr, int repeat_others = 1) {
 	
-	float height = width * 0.75;
 	float side_width = sqrt(pow(width * 0.5, 2) + pow(height, 2));
 	float rad = atan(height / (width * 0.5));
 	float angle = glm::degrees(rad);
 
-	const int mesh_ammount = 4;
-	PrimitiveMesh* meshes = new PrimitiveMesh[mesh_ammount]{
-		*CreateTriangle(width, height),
-		*CreateTriangle(width, height),
-		*CreatePlane(width, depth),
-		*CreatePlane(side_width, depth),
-		//*CreatePlane(side_width, depth),
+	Texture* texture = new Texture(GL_TEXTURE_2D);
+	texture->Load(front_and_back_texture);
+
+	const int mesh_ammount = 5;
+	vector<PrimitiveMesh*> meshes = {
+		CreateTriangle(width, height, texture),
+		CreateTriangle(width, height, texture),
+		CreatePlane(width, depth, other_faces, repeat_others, repeat_others),
+		CreatePlane(side_width, depth, other_faces, 1, repeat_others),
+		CreatePlane(side_width, depth, other_faces, 1, repeat_others),
 	};
 	
 	for (int i = 0; i < mesh_ammount; i++) {
-		meshes[i].SetShaders(shader);
+		meshes[i]->SetShaders(shader);
 	}
 
-	meshes[1].Move(0, 0, depth);
-	meshes[2].Move(0, 0, depth * 0.5);
-	meshes[3].Move(-width * 0.5 / (90 - angle), height * 0.5, depth * 0.5);
-	//meshes[4].Rotate(1, 0, 1, 90);
-	PrimitiveObject* triangle = new PrimitiveObject(meshes, mesh_ammount);
-	triangle->Move(0, 1, 0);
+	meshes[1]->Move(0, 0, depth);
+	meshes[2]->Move(0, 0, depth * 0.5);
+	meshes[3]->Move(-width * 0.25, height * 0.5, depth * 0.5);
+	meshes[4]->Move(width * 0.25, height * 0.5, depth * 0.5);
+	
+	//PrimitiveObject* triangle = new PrimitiveObject(meshes, mesh_ammount);
+	//triangle->Move(0, 1, 0);
+	//triangle->RotateOneMesh(3, {0,0,1}, angle);
+	//triangle->RotateOneMesh(4, {0,0,1}, -angle);
 
-
-	return triangle;
+	return meshes;
 }
 
-static PrimitiveObject* CreateHouse() {
+static PrimitiveObject* CreateHouse(Shader* roofShader, Shader* cubeShader, glm::vec3 movement = glm::vec3(0)) {
+	const int meshes_ammount = 6;
+	float height = 5;
+	float width = 5;
+	float depth = 5;
 
+	PrimitiveMesh* mesh_array = new PrimitiveMesh[meshes_ammount]{
+		*CreateSolidRect(width, height, depth)
+	};
+	
+	//vector<PrimitiveMesh*> meshes = CreateExtrudedTriangle(5, 3, 10, roofShader, "Textures/yellobrk.bmp", "Textures/tiles.bmp", 2);
+
+
+	Texture* texture = new Texture(GL_TEXTURE_CUBE_MAP);
+	vector<string> textures = {
+		"Textures/House/right.bmp",
+		"Textures/House/left.bmp",
+		"Textures/House/top.bmp",
+		"Textures/House/bottom.bmp",
+		"Textures/House/front.bmp",
+		"Textures/House/back.bmp"
+	};
+
+	vector<PrimitiveMesh*> meshes = CreateExtrudedTriangle(width, height / 2, depth, roofShader, "Textures/woodplanks.bmp", "Textures/tiles.bmp", 2);
+
+	for (int i = 1; i < meshes.size() + 1; i++) {
+		//make sure the roof is spaced properly with the cube 
+		meshes[i - 1]->Move(0, height / 2, -depth/2);
+		mesh_array[i] = *meshes[i - 1];
+	}
+
+	mesh_array[0].texture = texture;
+	mesh_array[0].texture->LoadCubeMap(textures);
+	mesh_array[0].SetShaders(cubeShader);
+
+	PrimitiveObject* object = new PrimitiveObject(mesh_array, meshes_ammount);
+
+	object->Move(movement.x, movement.y + height/4, movement.z);
+
+	object->RotateOneMesh(4, { 0,0,1 }, 45);
+	object->RotateOneMesh(5, { 0,0,1 }, -45);
+
+	return object;
 }
 
 static PrimitiveObject* CreatePrimitiveObject() {
@@ -511,7 +566,7 @@ static PrimitiveObject* CreateTree(Texture* bark_texture, int repeat_bark, Textu
 	const int mesh_ammount = 2;
 
 	PrimitiveMesh* meshes = new PrimitiveMesh[mesh_ammount]{
-		*CreateCylinder(0.75f, 5, 20, bark_texture, repeat_bark),* CreateSphere(2.75, 15, 15, leaves_texture, 1)
+		*CreateCylinder(0.75f, 5, 20, bark_texture, repeat_bark),* CreateSphere(2.75, 15, 15, leaves_texture, repeat_leaves)
 	};
 	meshes[1].Move(0, 7, 0);
 	PrimitiveObject* obj = new PrimitiveObject(meshes, mesh_ammount);

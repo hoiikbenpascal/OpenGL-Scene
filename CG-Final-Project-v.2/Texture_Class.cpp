@@ -9,7 +9,7 @@ void Texture::Activate()
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
 	}
-	glBindTexture(GL_TEXTURE_2D, id);
+	glBindTexture(textureType, id);
 }
 
 void Texture::LoadCubeMap(vector<string> texture_paths)
@@ -42,7 +42,7 @@ void Texture::LoadCubeMap(vector<string> texture_paths)
 			width,
 			height,
 			0,
-			GL_RGB,
+			GL_BGR,
 			GL_UNSIGNED_BYTE,
 			data
 		);
